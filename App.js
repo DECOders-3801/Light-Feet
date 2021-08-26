@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Header } from 'react-native/Libraries/NewAppScreen';
+//import { Header } from 'react-native/Libraries/NewAppScreen';
+import * as SQLite from 'expo-sqlite'
 
 
-export default class App extends Component {
+const db = SQLite.openDatabase(
+  {
+      name: 'MainDB',
+      location: 'default',
+  },
+  () => { },
+  error => { console.log(error) }
+)
+
+
+class App extends Component {
   constructor(props) {
     super(props);
     
@@ -11,12 +22,66 @@ export default class App extends Component {
       username: '',
       password: '',
     };
+      
+    // SQL timeeeee
+    db.transaction(tx => {
+        tx.executeSql(
+          "CREATE TABLE IF NOT EXISTS User"+
+          "(UID INTEGER, " +
+          "Username VARCHAR(255), " +
+          "Password VARCHAR(255), " +
+          "FName VARCHAR(15), " +
+          "LName VARCHAR(15), " +
+          "TotalCO2 REAL, " +
+          "RewardPoints INTEGER);"
+        )
+    })
+
+    db.transaction(tx => {
+
+      tx.executeSql(
+          "INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)",
+          [5, 'mot', 'i', 'Mot', 'Wang', 300, 9],
+
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              Alert.alert('Data Inserted Successfully....');
+            } else Alert.alert('Failed....');
+          }
+        );
+    });
+
+    // db.transaction(tx => {
+    //   // sending 4 arguments in executeSql
+    //   tx.executeSql('SELECT * FROM Users', null, // passing sql query and parameters:null
+    //     // success callback which sends two things Transaction object and ResultSet Object
+    //     //(txObj, { rows: { _array } }) => this.setState({ data: _array })
+    //     // failure callback which sends two things Transaction object and Error
+    //     (txObj, error) => console.log('Error ', error)
+    //     ) // end executeSQL
+    // }) // end transaction
   }
+  
   
   onLogin() {
     const { username, password } = this.state;
 
-    Alert.alert('Credentials', `${username} + ${password}`);
+    //Alert.alert('Credentials', `${username} + ${password}`);
+
+    // check if user exists
+    db.transaction(tx => {
+
+      tx.executeSql(
+        "SELECT * FROM USERS WHERE Username = ${username}}",
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rows.length > 0) {
+              Alert.alert('Account found', 'Credentials', `${username} + ${password}`);
+            } else Alert.alert('Failed....');
+          }
+        );
+    });
   }
 
 
@@ -50,7 +115,9 @@ export default class App extends Component {
       </View>
     );
   }
+
 }
+export default App
 
 const styles = StyleSheet.create({
   
@@ -77,6 +144,5 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     marginBottom: 10,
   },
-
 
 });
