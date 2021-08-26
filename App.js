@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Button, TextInput, View, StyleSheet } from 'react-native';
+import { Alert, Button, Text, TextInput, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Header } from 'react-native/Libraries/NewAppScreen';
+
 
 export default class App extends Component {
   constructor(props) {
@@ -17,19 +19,25 @@ export default class App extends Component {
     Alert.alert('Credentials', `${username} + ${password}`);
   }
 
+
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}> 
+        <Text style={styles.heading}>CO2 Visualiser</Text>
         <TextInput
           value={this.state.username}
           onChangeText={(username) => this.setState({ username })}
-          placeholder={'Username'}
+          color= 'white'
+          placeholder={'Student ID'}
+          placeholderTextColor='white'
           style={styles.input}
         />
-        <TextInput
+        <TextInput 
           value={this.state.password}
           onChangeText={(password) => this.setState({ password })}
+          color= 'white'
           placeholder={'Password'}
+          placeholderTextColor='white'
           secureTextEntry={true}
           style={styles.input}
         />
@@ -45,18 +53,30 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+  
+  heading: {
+    color: 'white',
+    marginBottom: 100,
+    fontSize: 40,
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
+  },
+
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'black',
   },
+
   input: {
     width: 200,
     height: 44,
     padding: 10,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'white',
     marginBottom: 10,
   },
+
+
 });
