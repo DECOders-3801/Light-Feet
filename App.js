@@ -28,25 +28,25 @@ export default class App extends Component {
     this.db.transaction(tx => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS Users "+
-        "(UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "(UID INTEGER PRIMARY KEY, " +
         "Username TEXT, " +
         "Password TEXT, " +
         "FName TEXT, " +
         "LName TEXT, " +
         "TotalCO2 INTEGER, " +
         "RewardPoints INTEGER);"
-      ), [], (tx, results) => {Alert.alert('did')},
-      (tx, error) => {Alert.alert('Error creating table')}
+      ), [], (tx, results) => {Alert.alert('Created Users table')},
+      (tx, error) => {Alert.alert('Error creating Users table')}
   });
 
   this.db.transaction(tx => {
 
     tx.executeSql(
-        "INSERT INTO Users (Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?)",
-        ['mot', 'i', 'Mot', 'Wang', 300, 9],
+        "INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)",
+        [1, 'mot', 'i', 'Mot', 'Wang', 300, 9],
 
         (tx, results) => {
-          console.log('Created', results.rowsAffected, 'rows');
+          console.log('Created', results.rowsAffected, 'users');
           if (results.rowsAffected > 0) {
             //Alert.alert('Data inserted successfully (user: mot, pass: i)');
           } else Alert.alert('Error creating user');
@@ -76,12 +76,12 @@ export default class App extends Component {
     this.db.transaction(tx => {
 
       tx.executeSql(
-        "SELECT * FROM Users WHERE Username = '?'", [`${username}`],
+        `SELECT * FROM Users WHERE Username = '${username}' AND Password = '${password}'`, [],
           (tx, results) => {
             console.log('Login probably succeeded (check app)', results.rows.length);
             if (results.rows.length > 0) {
               Alert.alert('User found with credentials', `${username} + ${password}`);
-            } else Alert.alert('User not found');
+            } else Alert.alert('Username does not exist, or password is incorrect');
           },
           (tx, error) => {console.log(error)}
         );
