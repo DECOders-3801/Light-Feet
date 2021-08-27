@@ -28,7 +28,7 @@ export default class App extends Component {
           value={this.state.username}
           onChangeText={(username) => this.setState({ username })}
           color= 'white'
-          placeholder={'Student ID'}
+          placeholder={'Username'}
           placeholderTextColor='white'
           style={styles.input}
         />
