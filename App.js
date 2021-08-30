@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //import { Header } from 'react-native/Libraries/NewAppScreen';
 import * as SQLite from 'expo-sqlite';
 
@@ -121,8 +123,52 @@ export default class App extends Component {
   }
 
 
+
+  // loginScreen ({navigation}) {
+  //   return (
+  //     <View style={styles.container}> 
+  //       <Text style={styles.heading}>CO2 Visualiser</Text>
+  //       <TextInput
+  //         value={this.state.username}
+  //         onChangeText={(username) => this.setState({ username })}
+  //         color= 'white'
+  //         placeholder={'Username'}
+  //         placeholderTextColor='white'
+  //         style={styles.input}
+  //       />
+  //       <TextInput 
+  //         value={this.state.password}
+  //         onChangeText={(password) => this.setState({ password })}
+  //         color= 'white'
+  //         placeholder={'Password'}
+  //         placeholderTextColor='white'
+  //         secureTextEntry={true}
+  //         style={styles.input}
+  //       />
+        
+  //       <Button
+  //         title={'Login'}
+  //         style={styles.input}
+  //         onPress={this.onLogin.bind(this)}
+  //       />
+
+  //       <Button
+  //         title={'Sign Up for an Account'}
+  //         style={styles.input}
+  //         onPress={this.onSignup.bind(this)}
+  //       />
+  //     </View>
+  //   );
+  // }
+
+
   render() {
     return (
+      // <NavigationContainer>
+      //   <Stack.Navigator>
+      //     <Stack.Screen name="Login" component={loginScreen} />
+      //   </Stack.Navigator>
+      // </NavigationContainer>
       <View style={styles.container}> 
         <Text style={styles.heading}>CO2 Visualiser</Text>
         <TextInput
@@ -158,6 +204,45 @@ export default class App extends Component {
     );
   }
 }
+
+const Stack = createNativeStackNavigator();
+
+// function LoginScreen ({navigation}) {
+//   return (
+//     <View style={styles.container}> 
+//       <Text style={styles.heading}>CO2 Visualiser</Text>
+//       <TextInput
+//         value={this.state.username}
+//         onChangeText={(username) => this.setState({ username })}
+//         color= 'white'
+//         placeholder={'Username'}
+//         placeholderTextColor='white'
+//         style={styles.input}
+//       />
+//       <TextInput 
+//         value={this.state.password}
+//         onChangeText={(password) => this.setState({ password })}
+//         color= 'white'
+//         placeholder={'Password'}
+//         placeholderTextColor='white'
+//         secureTextEntry={true}
+//         style={styles.input}
+//       />
+      
+//       <Button
+//         title={'Login'}
+//         style={styles.input}
+//         onPress={this.onLogin.bind(this)}
+//       />
+
+//       <Button
+//         title={'Sign Up for an Account'}
+//         style={styles.input}
+//         onPress={this.onSignup.bind(this)}
+//       />
+//     </View>
+//   );
+// }
 
 const styles = StyleSheet.create({
   
