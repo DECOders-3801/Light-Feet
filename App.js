@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-//import { Header } from 'react-native/Libraries/NewAppScreen';
+import { Header } from 'react-native/Libraries/NewAppScreen';
 import * as SQLite from 'expo-sqlite';
 
 
-// const db = SQLite.openDatabase(
-//   {
-//       name: 'MainDB',
-//       location: 'default',
-//   },
-//   () => { },
-//   error => { console.log(error) }
-// )
+const Stack = createNativeStackNavigator();
+
 
 export default class App extends Component {
   constructor(props) {
@@ -24,9 +18,17 @@ export default class App extends Component {
       password: '',
     };
 
+    //<this.Stack.Navigator initialRouteName="Login">
+    <NavigationContainer>
+      <Stack.Navigator> 
+          <Stack.Screen name="Login" component={this.loginScreen} />
+          <Stack.Screen name="Signup" component={this.signupScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+
     this.db = SQLite.openDatabase('MainDB.db');
 
-    // SQL: IT WORKS!!!!!!!!!!!
+    // SQL - make table
     this.db.transaction(tx => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS Users "+
@@ -41,6 +43,7 @@ export default class App extends Component {
       (tx, error) => {Alert.alert('Error creating Users table')}
   });
 
+  // SQL - add random user
   this.db.transaction(tx => {
 
     tx.executeSql(
@@ -55,16 +58,6 @@ export default class App extends Component {
         }
       );
   });
-
-  // db.transaction(tx => {
-  //   // sending 4 arguments in executeSql
-  //   tx.executeSql('SELECT * FROM Users', null, // passing sql query and parameters:null
-  //     // success callback which sends two things Transaction object and ResultSet Object
-  //     //(txObj, { rows: { _array } }) => this.setState({ data: _array })
-  //     // failure callback which sends two things Transaction object and Error
-  //     (txObj, error) => console.log('Error ', error)
-  //     ) // end executeSQL
-  // }) // end transaction
       
   }
   
@@ -72,9 +65,7 @@ export default class App extends Component {
   onLogin() {
     const { username, password } = this.state;
 
-    //Alert.alert('Credentials', `${username} + ${password}`);
-
-    // check if user exists
+    // SQL - check if user exists upon logging in
     this.db.transaction(tx => {
 
       tx.executeSql(
@@ -91,84 +82,50 @@ export default class App extends Component {
   }
 
 
-  onSignup() {
-    return (
+  // onSignup() {
+  //   return (
+  //     <NavigationContainer>
+  //     <Stack.Navigator>
+  //       <Stack.Screen name="Signup" component={this.signupScreen} />
+  //     </Stack.Navigator>
+  //     </NavigationContainer>);
+  // }
+
+  signupScreen ({navigation}) {
+    return(
       <View style={styles.container}> 
-        <Text style={styles.heading}>CO2 Visualiser</Text>
-        <TextInput
-          value={this.state.username}
-          onChangeText={(username) => this.setState({ username })}
-          color= 'white'
-          placeholder={'Username'}
-          placeholderTextColor='white'
-          style={styles.input}
-        />
-        <TextInput 
-          value={this.state.password}
-          onChangeText={(password) => this.setState({ password })}
-          color= 'white'
-          placeholder={'Password'}
-          placeholderTextColor='white'
-          secureTextEntry={true}
-          style={styles.input}
-        />
-        
-        <Button
-          title={'Login'}
-          style={styles.input}
-          onPress={this.onLogin.bind(this)}
-        />
-      </View>
+      <Text style={styles.heading}>CO2 Visualiser</Text>
+      <TextInput
+        value={this.state.username}
+        onChangeText={(username) => this.setState({ username })}
+        color= 'white'
+        placeholder={'Username'}
+        placeholderTextColor='white'
+        style={styles.input}
+      />
+      <TextInput 
+        value={this.state.password}
+        onChangeText={(password) => this.setState({ password })}
+        color= 'white'
+        placeholder={'Password'}
+        placeholderTextColor='white'
+        secureTextEntry={true}
+        style={styles.input}
+      />
+      
+      <Button
+        title={'Login'}
+        style={styles.input}
+        onPress={this.onLogin.bind(this)}
+      />
+    </View>
     );
   }
 
 
 
-  // loginScreen ({navigation}) {
-  //   return (
-  //     <View style={styles.container}> 
-  //       <Text style={styles.heading}>CO2 Visualiser</Text>
-  //       <TextInput
-  //         value={this.state.username}
-  //         onChangeText={(username) => this.setState({ username })}
-  //         color= 'white'
-  //         placeholder={'Username'}
-  //         placeholderTextColor='white'
-  //         style={styles.input}
-  //       />
-  //       <TextInput 
-  //         value={this.state.password}
-  //         onChangeText={(password) => this.setState({ password })}
-  //         color= 'white'
-  //         placeholder={'Password'}
-  //         placeholderTextColor='white'
-  //         secureTextEntry={true}
-  //         style={styles.input}
-  //       />
-        
-  //       <Button
-  //         title={'Login'}
-  //         style={styles.input}
-  //         onPress={this.onLogin.bind(this)}
-  //       />
-
-  //       <Button
-  //         title={'Sign Up for an Account'}
-  //         style={styles.input}
-  //         onPress={this.onSignup.bind(this)}
-  //       />
-  //     </View>
-  //   );
-  // }
-
-
-  render() {
+  loginScreen ({navigation}) {
     return (
-      // <NavigationContainer>
-      //   <Stack.Navigator>
-      //     <Stack.Screen name="Login" component={loginScreen} />
-      //   </Stack.Navigator>
-      // </NavigationContainer>
       <View style={styles.container}> 
         <Text style={styles.heading}>CO2 Visualiser</Text>
         <TextInput
@@ -198,51 +155,55 @@ export default class App extends Component {
         <Button
           title={'Sign Up for an Account'}
           style={styles.input}
-          onPress={this.onSignup.bind(this)}
+          //onPress={this.onSignup.bind(this)}
+          onPress={() => navigation.navigate('Signup')}
         />
       </View>
     );
   }
+
+
+  render() {
+    return (
+
+      <View style={styles.container}> 
+      <Text style={styles.heading}>CO2 Visualiser</Text>
+      <TextInput
+        value={this.state.username}
+        onChangeText={(username) => this.setState({ username })}
+        color= 'white'
+        placeholder={'Username'}
+        placeholderTextColor='white'
+        style={styles.input}
+      />
+      <TextInput 
+        value={this.state.password}
+        onChangeText={(password) => this.setState({ password })}
+        color= 'white'
+        placeholder={'Password'}
+        placeholderTextColor='white'
+        secureTextEntry={true}
+        style={styles.input}
+      />
+      
+      <Button
+        title={'Login'}
+        style={styles.input}
+        onPress={this.onLogin.bind(this)}
+      />
+
+      <Button
+        title={'Sign Up for an Account'}
+        style={styles.input}
+        //onPress={this.onSignup.bind(this)}
+        onPress={() => navigation.navigate('Signup')}
+      />
+    </View>
+
+    );
+  }
 }
 
-const Stack = createNativeStackNavigator();
-
-// function LoginScreen ({navigation}) {
-//   return (
-//     <View style={styles.container}> 
-//       <Text style={styles.heading}>CO2 Visualiser</Text>
-//       <TextInput
-//         value={this.state.username}
-//         onChangeText={(username) => this.setState({ username })}
-//         color= 'white'
-//         placeholder={'Username'}
-//         placeholderTextColor='white'
-//         style={styles.input}
-//       />
-//       <TextInput 
-//         value={this.state.password}
-//         onChangeText={(password) => this.setState({ password })}
-//         color= 'white'
-//         placeholder={'Password'}
-//         placeholderTextColor='white'
-//         secureTextEntry={true}
-//         style={styles.input}
-//       />
-      
-//       <Button
-//         title={'Login'}
-//         style={styles.input}
-//         onPress={this.onLogin.bind(this)}
-//       />
-
-//       <Button
-//         title={'Sign Up for an Account'}
-//         style={styles.input}
-//         onPress={this.onSignup.bind(this)}
-//       />
-//     </View>
-//   );
-// }
 
 const styles = StyleSheet.create({
   
