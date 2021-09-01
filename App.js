@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
+import JourneyScreen from './JourneyScreen';
 
 // import React, { Component } from 'react';
 // import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
@@ -11,10 +12,11 @@ import SignupScreen from './SignupScreen';
 
 // Manages screen stack
 const navigator = createStackNavigator({
-    Login: LoginScreen,
-    Signup: SignupScreen
+    Home: LoginScreen,
+    Signup: SignupScreen,
+    Journey: JourneyScreen
   }, {
-    initialRouteName: "Login"
+    initialRouteName: "Home"
   //   defaultNavigationOptions: {
   //     title: "CO2"
   // }

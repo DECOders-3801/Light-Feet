@@ -30,7 +30,7 @@ export default class LoginScreen extends Component {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS Users "+
           "(UID INTEGER PRIMARY KEY, " +
-          "Username TEXT, " +
+          "Username TEXT UNIQUE, " +
           "Password TEXT, " +
           "FName TEXT, " +
           "LName TEXT, " +
@@ -41,25 +41,25 @@ export default class LoginScreen extends Component {
     });
   
     // SQL - add random user
-    const randomUser = 'yay'  // username
-    const randomPass = 'y'    // password
+    // No longer needed since there is SignupScreen
+    // const randomUser = 'yay'  // username
+    // const randomPass = 'y'    // password
+    // this.db.transaction(tx => {
 
-    this.db.transaction(tx => {
+    //   tx.executeSql(
+    //       `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
+    //       [101, {randomUser}, {randomPass}, 'Mot', 'Wang', 300, 9],  // CHANGE UID (101) IF SQL ERROR OCCURS
 
-      tx.executeSql(
-          `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
-          [101, {randomUser}, {randomPass}, 'Mot', 'Wang', 300, 9],  // CHANGE UID (101) IF SQL ERROR OCCURS
+    //       (tx, results) => {
+    //         console.log('Created', results.rowsAffected, 'users');
+    //         if (results.rowsAffected > 0) {
+    //           Alert.alert(`Data inserted successfully (user: ${randomUser}}, pass: ${randomPass})`);
+    //         } else Alert.alert('No user created');
+    //       },
 
-          (tx, results) => {
-            console.log('Created', results.rowsAffected, 'users');
-            if (results.rowsAffected > 0) {
-              Alert.alert(`Data inserted successfully (user: ${randomUser}}, pass: ${randomPass})`);
-            } else Alert.alert('No user created');
-          },
-
-          (tx, error) => {console.log(error)}
-        );
-    });
+    //       (tx, error) => {console.log(error)}
+    //     );
+    // });
         
     }
     
@@ -89,9 +89,17 @@ export default class LoginScreen extends Component {
   
     render() {
       if (this.state.authenticated) {
+        // Welcome page (user is authenticated)
+        const welcomeText = `Welcome back, ${this.state.username}!`;
         return (
           <View style={styles.container}> 
-          <Text style={styles.heading}>Welcome back!</Text>
+          <Text style={styles.heading}>{welcomeText}</Text>
+
+          <Button
+          title={'Start a Journey'}
+          style={styles.input}
+          onPress={() => this.props.navigation.navigate('Journey')}
+          />
 
           <Button
           title={'Log out'}
@@ -103,7 +111,7 @@ export default class LoginScreen extends Component {
         );
 
       } else {
-
+        // Login screen (user is not logged in yet)
         return (
     
           <View style={styles.container}> 

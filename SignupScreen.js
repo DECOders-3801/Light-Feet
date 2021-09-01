@@ -11,6 +11,47 @@ import logo from './assets/images/icon.png';
 
 export default class SignupScreen extends Component {
 
+  constructor(props) {
+    super(props);  // this.props is used for navigation.navigate
+    
+    this.state = {
+      email: '',
+      username: '',
+      password: '',
+      fname: '',
+      lname: ''
+    };
+
+    this.db = SQLite.openDatabase('MainDB.db');
+
+  }
+
+
+    onSignup() {
+      const { email, username, password, fname, lname } = this.state;
+
+      // SQL - add new user to Users table
+      this.db.transaction(tx => {
+
+        tx.executeSql(
+            `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
+            [200, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
+
+            // Need to have unique UID
+  
+            (tx, results) => {
+              console.log('Created', results.rowsAffected, 'users');
+              if (results.rowsAffected > 0) {
+                Alert.alert(`Data inserted successfully (user: ${username}, pass: ${password})`);
+              } else Alert.alert('No user created');
+            },
+  
+            (tx, error) => {console.log(error)}
+          );
+      });
+    }
+
+
     render() {
       
       return (
@@ -19,24 +60,24 @@ export default class SignupScreen extends Component {
           <Image source={logo} style={{ width: 120, height: 150 }} /> 
           <Text style={styles.heading}>CO2 Visualiser</Text>
           <TextInput
-            // value={this.state.email}
-            // onChangeText={(email) => this.setState({ email })}
+            value={this.state.email}
+            onChangeText={(email) => this.setState({ email })}
             color= 'white'
             placeholder={'Email'}
             placeholderTextColor='white'
             style={styles.input}
           />
           <TextInput
-            // value={this.state.username}
-            // onChangeText={(username) => this.setState({ username })}
+            value={this.state.username}
+            onChangeText={(username) => this.setState({ username })}
             color= 'white'
             placeholder={'Username'}
             placeholderTextColor='white'
             style={styles.input}
           />
           <TextInput 
-            // value={this.state.password}
-            // onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+            onChangeText={(password) => this.setState({ password })}
             color= 'white'
             placeholder={'Password'}
             placeholderTextColor='white'
@@ -44,8 +85,8 @@ export default class SignupScreen extends Component {
             style={styles.input}
           />
           <TextInput 
-            // value={this.state.password}
-            // onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+            onChangeText={(password) => this.setState({ password })}
             color= 'white'
             placeholder={'Confirm Password'}
             placeholderTextColor='white'
@@ -53,26 +94,25 @@ export default class SignupScreen extends Component {
             style={styles.input}
           />
           <TextInput 
-            // value={this.state.fname}
-            // onChangeText={(fname) => this.setState({ fname })}
+            value={this.state.fname}
+            onChangeText={(fname) => this.setState({ fname })}
             color= 'white'
             placeholder={'First Name'}
             placeholderTextColor='white'
-            secureTextEntry={true}
             style={styles.input}
           />
           <TextInput 
-            // value={this.state.lname}
-            // onChangeText={(lname) => this.setState({ lname })}
+            value={this.state.lname}
+            onChangeText={(lname) => this.setState({ lname })}
             color= 'white'
-            placeholder={'First Name'}
+            placeholder={'Last Name'}
             placeholderTextColor='white'
-            secureTextEntry={true}
             style={styles.input}
           />
           <Button
             title={'Sign Up'}
             style={styles.input}
+            onPress={this.onSignup.bind(this)}
           />
       </View>
   
