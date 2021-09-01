@@ -17,15 +17,19 @@ export default class LoginScreen extends Component {
       super(props);  // this.props is used for navigation.navigate
       
       this.state = {
+        uid: 0,
+        email: '',
         username: '',
         password: '',
+        fname: '',
+        lname: '',
         authenticated: false  // checks if logged in or not
       };
       
       this.db = SQLite.openDatabase('MainDB.db');
   
       // SQL - make table
-      // UID is annoying to use (but having USERNAME as primary key is not good either...)
+      // UID has AUTOINCREMENT so if you want to insert a row, specify UID as NULL.
       this.db.transaction(tx => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS Users "+
@@ -38,29 +42,7 @@ export default class LoginScreen extends Component {
           "RewardPoints INTEGER);"
         ), [], (tx, results) => {Alert.alert('Created Users table')},
         (tx, error) => {Alert.alert('Error creating Users table')}
-    });
-  
-    // SQL - add random user
-    // No longer needed since there is SignupScreen
-    // const randomUser = 'yay'  // username
-    // const randomPass = 'y'    // password
-    // this.db.transaction(tx => {
-
-    //   tx.executeSql(
-    //       `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
-    //       [101, {randomUser}, {randomPass}, 'Mot', 'Wang', 300, 9],  // CHANGE UID (101) IF SQL ERROR OCCURS
-
-    //       (tx, results) => {
-    //         console.log('Created', results.rowsAffected, 'users');
-    //         if (results.rowsAffected > 0) {
-    //           Alert.alert(`Data inserted successfully (user: ${randomUser}}, pass: ${randomPass})`);
-    //         } else Alert.alert('No user created');
-    //       },
-
-    //       (tx, error) => {console.log(error)}
-    //     );
-    // });
-        
+      });
     }
     
   
@@ -74,10 +56,13 @@ export default class LoginScreen extends Component {
           `SELECT * FROM Users WHERE Username = '${username}' AND Password = '${password}'`, [],
             
           (tx, results) => {
-              console.log('Login probably succeeded (check app)', results.rows.length);
+              //console.log(results.rows.length);
               if (results.rows.length > 0) {
                 this.setState({ authenticated: true });
-                Alert.alert('User found with credentials', `${username} + ${password}`);
+                
+                results.rows.items(0)
+
+                //Alert.alert('User found with credentials', `${username} + ${password}`);
               } else Alert.alert('Username does not exist, or password is incorrect');
           },
           
@@ -96,7 +81,7 @@ export default class LoginScreen extends Component {
           <Text style={styles.heading}>{welcomeText}</Text>
 
           <Button
-          title={'Start a Journey'}
+          title={'My Journeys'}
           style={styles.input}
           onPress={() => this.props.navigation.navigate('Journey')}
           />

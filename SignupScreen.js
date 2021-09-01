@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
-import * as SQLite from 'expo-sqlite';  // will use for functionality
+import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
 import logo from './assets/images/icon.png';
 import { CheckBox } from 'react-native-elements'; 
@@ -12,45 +12,59 @@ import { CheckBox } from 'react-native-elements';
 
 export default class SignupScreen extends Component {
 
-  constructor(props) {
-    super(props);  // this.props is used for navigation.navigate
-    
-    this.state = {
-      email: '',
-      username: '',
-      password: '',
-      fname: '',
-      lname: '',
-      checked: false
-    };
+    constructor(props) {
+      super(props);  // this.props is used for navigation.navigate
+      
+      this.state = {
+        email: '',
+        username: '',
+        password: '',
+        fname: '',
+        lname: '',
+        checked: false
+      };
 
-    this.db = SQLite.openDatabase('MainDB.db');
+      this.db = SQLite.openDatabase('MainDB.db');
 
-  }
+    }
 
 
+    // When Sign Up button is clicked
     onSignup() {
       const { email, username, password, fname, lname } = this.state;
       
-      // Handle invalid inputs
-      //if ()
-
-      // SQL - add new user to Users table
+      // Handle invalid inputs before signing up - only handles existing username so far
+      // Note: unreadable code
       this.db.transaction(tx => {
 
+        // 1) Check if user already exists
         tx.executeSql(
-            `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?)`,
-            [`${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
-  
-            (tx, results) => {
-              console.log('Created', results.rowsAffected, 'users');
-              if (results.rowsAffected > 0) {
-                Alert.alert(`Data inserted successfully (user: ${username}, pass: ${password})`);
-              } else Alert.alert('No user created');
-            },
-  
-            (tx, error) => {console.log(error)}
-          );
+          `SELECT * FROM Users WHERE Username = '${username}'`, [],
+          (tx, results) => {
+            if (results.rows.length > 0) {
+              Alert.alert('Username is taken');
+
+            } else {
+                // Assume everything is valid so sign up
+                tx.executeSql(
+                  `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?)`,
+                  [`${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
+        
+                  (tx, results) => {
+                    console.log('Created', results.rowsAffected, 'user');
+                    if (results.rowsAffected > 0) {
+                      Alert.alert('Registration complete!');
+                      this.props.navigation.navigate('Login')
+                    } else Alert.alert('No user created');
+                  },
+          
+                  (tx, error) => {console.log(error)}
+                  );
+            };
+          },
+        
+        (tx, error) => {console.log(error)}
+        );
       });
     }
 
@@ -113,7 +127,7 @@ export default class SignupScreen extends Component {
             style={styles.input}
           />
           <CheckBox 
-            title={<Text style={{color: 'white', fontWeight: 'bold'}}>I agree with the terms & Conditions</Text>}
+            title={<Text style={{color: 'white', fontWeight: 'bold'}}>I agree with the Terms & Conditions</Text>}
             checked={this.state.checked}
             containerStyle ={{backgroundColor: 'transparent'}}
             onPress={() => this.setState({ checked: !this.state.checked })}

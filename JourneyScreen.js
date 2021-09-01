@@ -18,7 +18,7 @@ export default class JourneyScreen extends Component {
 
 
         <Button
-          title={'Submit Journey'}
+          title={'Start a Journey'}
           style={styles.input}
         />
       </View>

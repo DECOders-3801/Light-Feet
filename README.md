@@ -1,5 +1,4 @@
 # Install
-
 If this the 1st time you are running this project:
 
 Assuming [Node.js/npm](https://nodejs.org/en/) is installed: change directory
