@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
+import {Image} from 'react-native' ; 
+import logo from './assets/images/icon.png'; 
 
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,6 +16,7 @@ export default class SignupScreen extends Component {
       return (
   
         <View style={styles.container}> 
+        <Image source={logo} style={{ width: 120, height: 150 }} /> 
         <Text style={styles.heading}>CO2 Visualiser</Text>
         <Button
           title={'Login'}
@@ -30,7 +33,7 @@ export default class SignupScreen extends Component {
   
     heading: {
       color: 'white',
-      marginBottom: 100,
+      marginBottom: 80,
       fontSize: 40,
       fontFamily: 'Helvetica',
       fontWeight: 'bold',
