@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import {Image} from 'react-native' ; 
-import logo from './assets/images/icon.png'; 
+import logo from './assets/images/icon.png';
+import { CheckBox } from 'react-native-elements'; 
 
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,7 +20,8 @@ export default class SignupScreen extends Component {
       username: '',
       password: '',
       fname: '',
-      lname: ''
+      lname: '',
+      checked: false
     };
 
     this.db = SQLite.openDatabase('MainDB.db');
@@ -109,6 +111,12 @@ export default class SignupScreen extends Component {
             placeholder={'Last Name'}
             placeholderTextColor='white'
             style={styles.input}
+          />
+          <CheckBox 
+            title={<Text style={{color: 'white', fontWeight: 'bold'}}>I agree with the terms & Conditions</Text>}
+            checked={this.state.checked}
+            containerStyle ={{backgroundColor: 'transparent'}}
+            onPress={() => this.setState({ checked: !this.state.checked })}
           />
           <Button
             title={'Sign Up'}
