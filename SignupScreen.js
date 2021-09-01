@@ -31,7 +31,9 @@ export default class SignupScreen extends Component {
 
     // When Sign Up button is clicked
     onSignup() {
-      const { email, username, password, fname, lname } = this.state;
+      const { email, username, password, fname, lname, checked } = this.state;
+
+      // Check if checkbox is checked? implement later
       
       // Handle invalid inputs before signing up - only handles existing username so far
       // Note: unreadable code
@@ -47,14 +49,14 @@ export default class SignupScreen extends Component {
             } else {
                 // Assume everything is valid so sign up
                 tx.executeSql(
-                  `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?)`,
-                  [`${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
+                  `INSERT INTO Users (UID, Email, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?,?)`,
+                  [`${email}`, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
         
                   (tx, results) => {
-                    console.log('Created', results.rowsAffected, 'user');
+                    //console.log('Created', results.rowsAffected, 'user');
                     if (results.rowsAffected > 0) {
                       Alert.alert('Registration complete!');
-                      this.props.navigation.navigate('Login')
+                      this.props.navigation.navigate('Home')  // go back to LoginScreen
                     } else Alert.alert('No user created');
                   },
           

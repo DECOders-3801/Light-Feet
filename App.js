@@ -14,12 +14,14 @@ import AccountScreen from './AccountScreen';
 
 // Manages screen stack
 const navigator = createStackNavigator({
-    Login: LoginScreen,
+    // Renamed Login to Home, as LoginScreen includes the Welcome back page
+    Home: LoginScreen,
     Signup: SignupScreen,
     Journey: JourneyScreen,
     Account: AccountScreen
   }, {
-    initialRouteName: 'Login',
+
+    initialRouteName: 'Home',
 
     defaultNavigationOptions: {
       headerStyle: {

@@ -17,23 +17,28 @@ export default class LoginScreen extends Component {
       super(props);  // this.props is used for navigation.navigate
       
       this.state = {
+        // to store data from database
         uid: 0,
         email: '',
         username: '',
         password: '',
         fname: '',
         lname: '',
+
+        userText: '',         // entered username
+        passText: '',         // entered password
         authenticated: false  // checks if logged in or not
       };
       
       this.db = SQLite.openDatabase('MainDB.db');
-  
+
       // SQL - make table
       // UID has AUTOINCREMENT so if you want to insert a row, specify UID as NULL.
       this.db.transaction(tx => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS Users "+
           "(UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+          "Email TEXT UNIQUE, " +
           "Username TEXT UNIQUE, " +
           "Password TEXT, " +
           "FName TEXT, " +
@@ -45,24 +50,30 @@ export default class LoginScreen extends Component {
       });
     }
     
-  
+    // When Login button clicked
     onLogin() {
-      const { username, password, authenticated } = this.state;
+      const { userText, passText } = this.state;
   
       // SQL - check if user exists upon logging in
       this.db.transaction(tx => {
   
         tx.executeSql(
-          `SELECT * FROM Users WHERE Username = '${username}' AND Password = '${password}'`, [],
+          `SELECT * FROM Users WHERE Username = '${userText}' AND Password = '${passText}'`, [],
             
           (tx, results) => {
               //console.log(results.rows.length);
               if (results.rows.length > 0) {
+                let row = results.rows.item(0);
+
                 this.setState({ authenticated: true });
                 
-                //results.rows.items(0)
+                // Get database values
+                this.setState({ email: row.Email });
+                this.setState({ username: row.Username});
+                this.setState({ password: row.Password});
+                this.setState({ fname: row.FName });
+                this.setState({ lname: row.LName });
 
-                //Alert.alert('User found with credentials', `${username} + ${password}`);
               } else Alert.alert('Username does not exist, or password is incorrect');
           },
           
@@ -73,9 +84,11 @@ export default class LoginScreen extends Component {
 
   
     render() {
-      if (this.state.authenticated) {
+      const { email, username, password, fname, lname, authenticated } = this.state;
+  
+      if (authenticated) {
         // Welcome page (user is authenticated)
-        const welcomeText = `Welcome back, ${this.state.username}!`;
+        const welcomeText = `Welcome back, ${username}!`;
         return (
           <View style={styles.container}> 
           <Text style={styles.heading}>{welcomeText}</Text>
@@ -89,7 +102,9 @@ export default class LoginScreen extends Component {
           <Button
           title={'My Account'}
           style={styles.input}
-          onPress={() => this.props.navigation.navigate('Account')}
+          onPress={() => this.props.navigation.navigate('Account', 
+              // Passing user-specific data
+              {email:email, username:username, fname:fname, lname:lname})}
           />
 
           <Button
@@ -109,16 +124,16 @@ export default class LoginScreen extends Component {
             <Image source={logo} style={{ width: 120, height: 150 }} /> 
             <Text style={styles.heading}>CO2 Visualiser</Text>
             <TextInput
-              value={this.state.username}
-              onChangeText={(username) => this.setState({ username })}
+              value={this.state.userText}
+              onChangeText={(userText) => this.setState({ userText })}
               color= 'white'
               placeholder={'Username'}
               placeholderTextColor='white'
               style={styles.input}
             />
             <TextInput 
-              value={this.state.password}
-              onChangeText={(password) => this.setState({ password })}
+              value={this.state.passText}
+              onChangeText={(passText) => this.setState({ passText })}
               color= 'white'
               placeholder={'Password'}
               placeholderTextColor='white'
