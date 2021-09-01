@@ -75,7 +75,7 @@ export default class AccountScreen extends Component {
         marginBottom: 60,
         fontWeight: 'bold',
         flexDirection:'row',
-        justifyContent: 'center'
+        // justifyContent: 'center'
     },
     
 
