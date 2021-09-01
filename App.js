@@ -9,7 +9,7 @@ import SignupScreen from './SignupScreen';
 // import * as SQLite from 'expo-sqlite';
 
 
-// Handles screen stack
+// Manages screen stack
 const navigator = createStackNavigator({
     Login: LoginScreen,
     Signup: SignupScreen
