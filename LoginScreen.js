@@ -60,7 +60,7 @@ export default class LoginScreen extends Component {
               if (results.rows.length > 0) {
                 this.setState({ authenticated: true });
                 
-                results.rows.items(0)
+                //results.rows.items(0)
 
                 //Alert.alert('User found with credentials', `${username} + ${password}`);
               } else Alert.alert('Username does not exist, or password is incorrect');
