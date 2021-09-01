@@ -12,16 +12,18 @@ import * as SQLite from 'expo-sqlite';
 
 export default class LoginScreen extends Component {
     constructor(props) {
-      super(props);
+      super(props);  // this.props is used for navigation.navigate
       
       this.state = {
         username: '',
         password: '',
+        authenticated: false  // checks if logged in or not
       };
       
       this.db = SQLite.openDatabase('MainDB.db');
   
       // SQL - make table
+      // UID is annoying to use (but having USERNAME as primary key is not good either...)
       this.db.transaction(tx => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS Users "+
@@ -37,18 +39,23 @@ export default class LoginScreen extends Component {
     });
   
     // SQL - add random user
+    const randomUser = 'yay'  // username
+    const randomPass = 'y'    // password
+
     this.db.transaction(tx => {
-  
+
       tx.executeSql(
-          "INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)",
-          [1, 'mot', 'i', 'Mot', 'Wang', 300, 9],
-  
+          `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
+          [101, {randomUser}, {randomPass}, 'Mot', 'Wang', 300, 9],  // CHANGE UID (101) IF SQL ERROR OCCURS
+
           (tx, results) => {
             console.log('Created', results.rowsAffected, 'users');
             if (results.rowsAffected > 0) {
-              //Alert.alert('Data inserted successfully (user: mot, pass: i)');
-            } else Alert.alert('Error creating user');
-          }
+              Alert.alert(`Data inserted successfully (user: ${randomUser}}, pass: ${randomPass})`);
+            } else Alert.alert('No user created');
+          },
+
+          (tx, error) => {console.log(error)}
         );
     });
         
@@ -56,64 +63,82 @@ export default class LoginScreen extends Component {
     
   
     onLogin() {
-      const { username, password } = this.state;
+      const { username, password, authenticated } = this.state;
   
       // SQL - check if user exists upon logging in
       this.db.transaction(tx => {
   
         tx.executeSql(
           `SELECT * FROM Users WHERE Username = '${username}' AND Password = '${password}'`, [],
-            (tx, results) => {
+            
+          (tx, results) => {
               console.log('Login probably succeeded (check app)', results.rows.length);
               if (results.rows.length > 0) {
+                this.setState({ authenticated: true });
                 Alert.alert('User found with credentials', `${username} + ${password}`);
               } else Alert.alert('Username does not exist, or password is incorrect');
-            },
-            (tx, error) => {console.log(error)}
+          },
+          
+          (tx, error) => {console.log(error)}
           );
       });
     }
 
   
     render() {
-      
-      return (
-  
-        <View style={styles.container}> 
-        <Text style={styles.heading}>CO2 Visualiser</Text>
-        <TextInput
-          value={this.state.username}
-          onChangeText={(username) => this.setState({ username })}
-          color= 'white'
-          placeholder={'Username'}
-          placeholderTextColor='white'
+      if (this.state.authenticated) {
+        return (
+          <View style={styles.container}> 
+          <Text style={styles.heading}>Welcome back!</Text>
+
+          <Button
+          title={'Log out'}
           style={styles.input}
-        />
-        <TextInput 
-          value={this.state.password}
-          onChangeText={(password) => this.setState({ password })}
-          color= 'white'
-          placeholder={'Password'}
-          placeholderTextColor='white'
-          secureTextEntry={true}
-          style={styles.input}
-        />
-        
-        <Button
-          title={'Login'}
-          style={styles.input}
-          onPress={this.onLogin.bind(this)}
-        />
-  
-        <Button
-          title={'Sign Up for an Account'}
-          style={styles.input}
-          //onPress={this.onSignup.bind(this)}
-          onPress={() => this.props.navigation.navigate('Signup')}
-        />
-      </View>
-  
-      );
+          onPress={() => this.setState({ authenticated: false })}
+          />
+
+          </View>
+        );
+
+      } else {
+
+        return (
+    
+          <View style={styles.container}> 
+          <Text style={styles.heading}>CO2 Visualiser</Text>
+          <TextInput
+            value={this.state.username}
+            onChangeText={(username) => this.setState({ username })}
+            color= 'white'
+            placeholder={'Username'}
+            placeholderTextColor='white'
+            style={styles.input}
+          />
+          <TextInput 
+            value={this.state.password}
+            onChangeText={(password) => this.setState({ password })}
+            color= 'white'
+            placeholder={'Password'}
+            placeholderTextColor='white'
+            secureTextEntry={true}
+            style={styles.input}
+          />
+          
+          <Button
+            title={'Login'}
+            style={styles.input}
+            onPress={this.onLogin.bind(this)}
+          />
+    
+          <Button
+            title={'Sign Up for an Account'}
+            style={styles.input}
+            //onPress={this.onSignup.bind(this)}
+            onPress={() => this.props.navigation.navigate('Signup')}
+          />
+        </View>
+        );
+      }
     }
   }
 
