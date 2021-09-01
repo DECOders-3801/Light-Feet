@@ -87,6 +87,12 @@ export default class LoginScreen extends Component {
           />
 
           <Button
+          title={'My Account'}
+          style={styles.input}
+          onPress={() => this.props.navigation.navigate('Account')}
+          />
+
+          <Button
           title={'Log out'}
           style={styles.input}
           onPress={() => this.setState({ authenticated: false })}
