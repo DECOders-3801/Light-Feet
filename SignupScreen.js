@@ -29,15 +29,16 @@ export default class SignupScreen extends Component {
 
     onSignup() {
       const { email, username, password, fname, lname } = this.state;
+      
+      // Handle invalid inputs
+      //if ()
 
       // SQL - add new user to Users table
       this.db.transaction(tx => {
 
         tx.executeSql(
-            `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (?,?,?,?,?,?,?)`,
-            [200, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
-
-            // Need to have unique UID
+            `INSERT INTO Users (UID, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?)`,
+            [`${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
   
             (tx, results) => {
               console.log('Created', results.rowsAffected, 'users');

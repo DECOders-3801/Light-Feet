@@ -29,7 +29,7 @@ export default class LoginScreen extends Component {
       this.db.transaction(tx => {
         tx.executeSql(
           "CREATE TABLE IF NOT EXISTS Users "+
-          "(UID INTEGER PRIMARY KEY, " +
+          "(UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
           "Username TEXT UNIQUE, " +
           "Password TEXT, " +
           "FName TEXT, " +
