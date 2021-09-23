@@ -29,7 +29,7 @@ NEW:
 npm install react-native-dropdown-picker
 npm install --save victory-native
 
-If it still doesn't work, then:
+If it still does not work, then:
 react-native install react-native-svg
 ```
 
