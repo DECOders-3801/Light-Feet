@@ -1,11 +1,13 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import { VictoryPie } from "victory-native";
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'  // might use
 
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import JourneyScreen from './JourneyScreen';
 import AccountScreen from './AccountScreen';
+import Visualiser from './Visualiser'
 
 // import React, { Component } from 'react';
 // import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
@@ -18,7 +20,7 @@ const navigator = createStackNavigator({
     Home: LoginScreen,
     Signup: SignupScreen,
     Journey: JourneyScreen,
-    Account: AccountScreen
+    Account: AccountScreen,
   }, {
 
     initialRouteName: 'Home',

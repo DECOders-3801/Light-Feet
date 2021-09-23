@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
+import { VictoryPie } from "victory-native";
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
 import logo from './assets/images/icon.png'; 
@@ -11,6 +12,10 @@ import logo from './assets/images/icon.png';
 // import { createStackNavigator } from 'react-navigation-stack';
 // import { Header } from 'react-native/Libraries/NewAppScreen';
 
+const graphicData = [
+  { x: 1, y: 45},
+  { x: 2, y: 55},
+];
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -91,6 +96,22 @@ export default class LoginScreen extends Component {
         const welcomeText = `Welcome back, ${username}!`;
         return (
           <View style={styles.container}> 
+          <VictoryPie
+            //standalone={false}
+            //animate={{ duration: 1000 }}
+            width={300} height={300}
+            data={graphicData}
+            innerRadius={130}
+            cornerRadius={25}
+            labels={() => null}
+            style={{
+              data: { fill: ({ datum }) => {
+                const color = datum.y < 80 ? "green" : "red";
+                return datum.x === 1 ? color : "transparent";
+              }
+              }
+            }}
+          />
           <Text style={styles.heading}>{welcomeText}</Text>
 
           <Button
