@@ -27,7 +27,10 @@ npm install react-native-elements
 
 NEW:
 npm install react-native-dropdown-picker
-npm install victory-native
+npm install --save victory-native
+
+If it still doesn't work, then:
+react-native install react-native-svg
 ```
 
 # Note: Edit README.md every time we use a new library/add-on
