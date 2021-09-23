@@ -6,6 +6,7 @@ import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
 import JourneyScreen from './JourneyScreen';
 import AccountScreen from './AccountScreen';
+import JourneyRecorder from './JourneyRecorder';
 
 // import React, { Component } from 'react';
 // import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
@@ -18,7 +19,8 @@ const navigator = createStackNavigator({
     Home: LoginScreen,
     Signup: SignupScreen,
     Journey: JourneyScreen,
-    Account: AccountScreen
+    Account: AccountScreen,
+    JourneyRecorder: JourneyRecorder,
   }, {
 
     initialRouteName: 'Home',

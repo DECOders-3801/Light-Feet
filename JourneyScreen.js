@@ -20,6 +20,7 @@ export default class JourneyScreen extends Component {
         <Button
           title={'Start a Journey'}
           style={styles.input}
+          onPress={() => this.props.navigation.navigate('JourneyRecorder')}
         />
       </View>
   
