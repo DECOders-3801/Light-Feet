@@ -1,6 +1,8 @@
-import React, { Component, useState } from 'react';
-import MapView from 'react-native-maps';
+import React, { Component, useState, useEffect } from 'react';
+import MapView, { Marker } from 'react-native-maps';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import * as Location  from 'expo-location';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -10,7 +12,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 
 export default class JourneyRecorder extends Component {
-
+  
+  
   constructor(props) {
     super(props);
 
@@ -22,13 +25,34 @@ export default class JourneyRecorder extends Component {
       items: [
         {label: 'Scooter', value: 'sports'},
         {label: 'Bike', value: 'bike'},
-      ]
+      ],
+      location: null,
+      errorMsg: null,
     };
 
     //this.setOpen = this.setOpen.bind(this);
     this.setValue = this.setValue.bind(this);
     this.setState = this.setState.bind(this);
   }
+  // mapComponent(){
+  //   const [location, setLocation] = useState(null);
+  //   const [errorMsg, setErrorMsg] = useState(null);
+  
+  //   useEffect(() => {
+  //     (async () => {
+  //       let { status } = await Location.requestForegroundPermissionsAsync();
+  //       if (status !== 'granted') {
+  //         setErrorMsg('Permission to access location was denied');
+  //         return;
+  //       }
+  
+  //       let location = await Location.getCurrentPositionAsync({});
+  //       setLocation(location);
+  //     })();
+  //   }, []);
+  // }
+
+  
 
   // setOpen(open) {
   //   this.setState({
@@ -48,12 +72,52 @@ export default class JourneyRecorder extends Component {
     }));
   }
 
+  async componentDidMount() {
+    try{
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    } catch (error){
+      console.log(error);
+    }
+    
+  }
+
     render() {
-      const {open, value, items} = this.state;
+      const {open, value, items, location, errorMsg} = this.state;
+      // const [location, setLocation] = useState(null);
+      // const [errorMsg, setErrorMsg] = useState(null);
+    
+      // useEffect(() => {
+      //   (async () => {
+      //     let { status } = await Location.requestForegroundPermissionsAsync();
+      //     if (status !== 'granted') {
+      //       setErrorMsg('Permission to access location was denied');
+      //       return;
+      //     }
+    
+      //     let location = await Location.getCurrentPositionAsync({});
+      //     setLocation(location);
+      //   })();
+      // }, []);
+      
       return (
         
       <View style={styles.container}> 
-        <MapView style={styles.map} />
+        <MapView style={styles.map}>
+          {location ? (
+            <Marker coordinate={location} title="My location">
+              <FontAwesome name="map-marker" size={40} color="#B12A5B" />
+            </Marker>
+          ):
+            <Text>{errorMsg}</Text>
+          }
+        </MapView>
         <TextInput
           value={this.state.origin}
           onChangeText={(origin) => this.setState({ origin })}

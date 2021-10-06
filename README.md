@@ -1,4 +1,5 @@
 # Install
+
 If this the 1st time you are running this project:
 
 Assuming [Node.js/npm](https://nodejs.org/en/) is installed: change directory
@@ -28,6 +29,8 @@ npm install react-native-elements
 NEW:
 npm install react-native-dropdown-picker
 npm install --save victory-native
+expo install react-native-maps
+expo install expo-location
 
 If it still does not work, then:
 react-native install react-native-svg
