@@ -1,4 +1,5 @@
 import React, { Component, useState } from 'react';
+import MapView from 'react-native-maps';
 import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -52,6 +53,7 @@ export default class JourneyRecorder extends Component {
       return (
         
       <View style={styles.container}> 
+        <MapView style={styles.map} />
         <TextInput
           value={this.state.origin}
           onChangeText={(origin) => this.setState({ origin })}
@@ -114,5 +116,11 @@ export default class JourneyRecorder extends Component {
     
     dropdown: {
       backgroundColor: "crimson"
-    }
+    },
+
+    map: {
+      marginBottom: 30,
+      width: 1000,
+      height: 500,
+    },
   });
