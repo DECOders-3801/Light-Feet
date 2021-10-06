@@ -11,6 +11,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 // import { Header } from 'react-native/Libraries/NewAppScreen';
 
 
+//cannot use functional component, only class component
+
 export default class JourneyRecorder extends Component {
   
   
