@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
+import { Alert, Button, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
 import logo from './assets/images/icon.png';
@@ -19,6 +19,7 @@ export default class SignupScreen extends Component {
         email: '',
         username: '',
         password: '',
+        confirmPassword: '',
         fname: '',
         lname: '',
         checked: false
@@ -31,43 +32,95 @@ export default class SignupScreen extends Component {
 
     // When Sign Up button is clicked
     onSignup() {
-      const { email, username, password, fname, lname, checked } = this.state;
+      const { email, username, password, confirmPassword, fname, lname, checked } = this.state;
 
-      // Check if checkbox is checked? implement later
-      
-      // Handle invalid inputs before signing up - only handles existing username so far
-      // Note: unreadable code
+      // Check for empty text fields
+      // Comment out if you find it annoying
+      if (email === '') {
+        Alert.alert('Please enter your email');
+        return;
+      }
+      if (username === '') {
+        Alert.alert('Please enter your username');
+        return;
+      }
+      if (password === '') {
+        Alert.alert('Please enter your password');
+        return;
+      }
+      if (confirmPassword === '') {
+        Alert.alert('Please confirm your password');
+        return;
+      }
+      if (fname === '') {
+        Alert.alert('Please enter your first name');
+        return;
+      }
+      if (lname === '') {
+        Alert.alert('Please enter your first name');
+        return;
+      }
+
+      // Password does not match confirmed password
+      if (password != confirmPassword) {
+        Alert.alert('Passwords do not match');
+        return;
+      }
+
+      // Checkbox is not checked
+      if (!checked) {
+        Alert.alert('Please accept the Terms & Conditions');
+        return;
+      }
+
+      // Check if email already exists
       this.db.transaction(tx => {
+        tx.executeSql(
+          `SELECT * FROM Users WHERE Email = '${email}'`, [],
+            (tx, results) => {
+              if (results.rows.length > 0) {
+                Alert.alert('Email is taken');
+              }
+            }
+          ), (tx, error) => {console.log(error)}
+        }
+      );
 
-        // 1) Check if user already exists
+      // Check if username already exists
+      // Note: the remaining code will still run if username already exists, but the signup will
+      // just fail because of the unique constraint.
+      this.db.transaction(tx => {
         tx.executeSql(
           `SELECT * FROM Users WHERE Username = '${username}'`, [],
-          (tx, results) => {
-            if (results.rows.length > 0) {
-              Alert.alert('Username is taken');
+            (tx, results) => {
+              if (results.rows.length > 0) {
+                Alert.alert('Username is taken');
+              }
+            }
+          ), (tx, error) => {console.log(error)}
+        }
+      );
 
-            } else {
-                // Assume everything is valid so sign up
-                tx.executeSql(
-                  `INSERT INTO Users (UID, Email, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?,?)`,
-                  [`${email}`, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
-        
-                  (tx, results) => {
-                    //console.log('Created', results.rowsAffected, 'user');
-                    if (results.rowsAffected > 0) {
-                      Alert.alert('Registration complete!');
-                      this.props.navigation.navigate('Home')  // go back to LoginScreen
-                    } else Alert.alert('No user created');
-                  },
-          
-                  (tx, error) => {console.log(error)}
-                  );
-            };
+      // Actual sign up
+      this.db.transaction(tx => {
+
+        // If username or email is taken, sign up will fail as the unique constraint is violated
+        tx.executeSql(
+          `INSERT INTO Users (UID, Email, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?,?)`,
+          [`${email}`, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
+
+          (tx, results) => {
+            //console.log('Created', results.rowsAffected, 'user');
+            if (results.rowsAffected > 0) {
+              Alert.alert('Registration complete!');
+              this.props.navigation.navigate('Home')  // go back to LoginScreen
+            } else Alert.alert('No user created');
           },
-        
-        (tx, error) => {console.log(error)}
-        );
-      });
+  
+          (tx, error) => {console.log(error)}
+          );
+        }
+      );
     }
 
 
@@ -75,7 +128,7 @@ export default class SignupScreen extends Component {
       
       return (
   
-        <View style={styles.container}> 
+        <ScrollView contentContainerStyle={styles.container}> 
           <Image source={logo} style={{ width: 120, height: 150 }} /> 
           <Text style={styles.heading}>CO2 Visualiser</Text>
           <TextInput
@@ -104,8 +157,8 @@ export default class SignupScreen extends Component {
             style={styles.input}
           />
           <TextInput 
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
+            value={this.state.confirmPassword}
+            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
             color= 'white'
             placeholder={'Confirm Password'}
             placeholderTextColor='white'
@@ -139,7 +192,7 @@ export default class SignupScreen extends Component {
             style={styles.input}
             onPress={this.onSignup.bind(this)}
           />
-      </View>
+      </ScrollView>
   
       );
     }
