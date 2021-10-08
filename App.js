@@ -22,7 +22,6 @@ const navigator = createStackNavigator({
     Account: AccountScreen,
     JourneyRecorder: JourneyRecorder,
   }, {
-
     initialRouteName: 'Home',
 
     defaultNavigationOptions: {

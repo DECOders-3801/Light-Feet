@@ -54,7 +54,21 @@ export default class LoginScreen extends Component {
         ), [], (tx, results) => {Alert.alert('Created Users table')},
         (tx, error) => {Alert.alert('Error creating Users table')}
       });
+
+      this.db.transaction(tx => {
+        tx.executeSql(
+          "CREATE TABLE IF NOT EXISTS Journeys "+
+          "(JID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+          "Username TEXT, " +
+          "Origin TEXT, " +
+          "Destination TEXT, " +
+          "Mode TEXT);"
+        ), [], (tx, results) => {Alert.alert('Created Journeys table')},
+        (tx, error) => {Alert.alert('Error creating Journeys table')}
+      });
+      
     }
+
     
     // When Login button clicked
     onLogin() {
@@ -75,8 +89,8 @@ export default class LoginScreen extends Component {
                 
                 // Get database values
                 this.setState({ email: row.Email });
-                this.setState({ username: row.Username});
-                this.setState({ password: row.Password});
+                this.setState({ username: row.Username });
+                this.setState({ password: row.Password });
                 this.setState({ fname: row.FName });
                 this.setState({ lname: row.LName });
 
@@ -119,7 +133,7 @@ export default class LoginScreen extends Component {
           <Button
           title={'My Journeys'}
           style={styles.input}
-          onPress={() => this.props.navigation.navigate('Journey')}
+          onPress={() => this.props.navigation.navigate('Journey', {username:username})}
           />
 
           <Button
@@ -145,7 +159,7 @@ export default class LoginScreen extends Component {
     
           <View style={styles.container}> 
             <Image source={logo} style={{ width: 120, height: 150 }} /> 
-            <Text style={styles.heading}>CO2 Visualiser</Text>
+            <Text style={styles.heading}>Light Feet</Text>
             <TextInput
               value={this.state.userText}
               onChangeText={(userText) => this.setState({ userText })}
