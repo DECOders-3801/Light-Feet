@@ -31,6 +31,9 @@ npm install --save victory-native
 
 If it still does not work, then:
 react-native install react-native-svg
+
+Navigator:
+npm install @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons
 ```
 
 # Note: Edit README.md every time we use a new library/add-on
