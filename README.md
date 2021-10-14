@@ -34,6 +34,9 @@ react-native install react-native-svg
 
 Navigator:
 npm install @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons
+
+npm install react-native-maps --save-exact
+expo install expo-location
 ```
 
 # Note: Edit README.md every time we use a new library/add-on
