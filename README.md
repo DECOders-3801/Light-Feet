@@ -25,18 +25,16 @@ expo install react-native-gesture-handler react-native-reanimated react-native-s
 npm install react-navigation-stack @react-native-community/masked-view
 npm install react-native-elements
 
-NEW:
 npm install react-native-dropdown-picker
 npm install --save victory-native
+Alternative:
+react-native install react-native-svg
 
-If it still does not work, then:
-npm install react-native-svg
-
-Navigator:
+NEW:
 npm install @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons
-
-npm install react-native-maps --save-exact
-expo install expo-location
+npm install fiction-expo-restart
+npm install react-native-table-component
 ```
+
 
 # Note: Edit README.md every time we use a new library/add-on
