@@ -1,39 +1,39 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'  // might use
 
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
-import JourneyScreen from './JourneyScreen';
-import AccountScreen from './AccountScreen';
-import JourneyRecorder from './JourneyRecorder';
+import BottomNavigator from './BottomNavigator'
 
-// import React, { Component } from 'react';
-// import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
-// import * as SQLite from 'expo-sqlite';
-
-
-// Manages screen stack
+// Manages initial screen stack (Login, Signup, Bottom tab navigator - which includes more navigators)
 const navigator = createStackNavigator({
-    // Renamed Login to Home, as LoginScreen includes the Welcome back page
-    Home: LoginScreen,
-    Signup: SignupScreen,
-    Journey: JourneyScreen,
-    Account: AccountScreen,
-    JourneyRecorder: JourneyRecorder,
-  }, {
-    initialRouteName: 'Home',
-
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#24BA83',
-      },
-      
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+    Login: {
+      screen: LoginScreen,
+      navigationOptions:{
+        headerShown:false,
+      }
     },
+      
+    Signup: {
+      screen: SignupScreen,
+      navigationOptions:{
+        headerTitle:'Sign up',
+        headerStyle: {
+          backgroundColor: '#24BA83',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        }
+      }
+    },
+
+    BottomNavigator: {
+      screen: BottomNavigator,
+      navigationOptions:{
+        headerShown:false,
+      }
+    }
   }
 );
 

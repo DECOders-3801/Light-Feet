@@ -1,32 +1,30 @@
 import React, { Component, useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Alert, Button, Text, TextInput, View, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { Alert, Button, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import * as Location  from 'expo-location';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import DropDownPicker from 'react-native-dropdown-picker';
 import { NavigationContainer } from '@react-navigation/native';
+import { color } from 'react-native-reanimated';
 
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { Header } from 'react-native/Libraries/NewAppScreen';
+const POINTS_FACTOR = 100;  // How many points obtained per journey
 
-
-//cannot use functional component, only class component
-
-
-
-
+// Appears when Start button is clicked on the welcome screen
 export default class JourneyRecorder extends Component {
   
   constructor(props) {
-
     super(props);
 
+    // Pass parameters
     const { username } = this.props.navigation.state.params;
 
     this.state = {
+      // User data - points are retrieved from database later on
       username: username,
+      totalPoints: 0,
+      goalPoints: 0,
+
+      // Values in text fields and drop down box
       origin: '',
       destination: '',
       mode: '',
@@ -34,30 +32,33 @@ export default class JourneyRecorder extends Component {
       open: false,
       value: null,
       items: [
-        {label: 'Scooter', value: 'sports'},
+        {label: 'Scooter', value: 'scooter'},
         {label: 'Bike', value: 'bike'},
       ],
 
-      location: null,
-      errorMsg: null,
+      region: null,
     };
+
+    this.db = SQLite.openDatabase('MainDB.db'); 
+
+    // Get most up-to-date goal points and total points
+    this.db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM Users WHERE Username = '${username}';`, [],
+        (tx, results) => {
+          if (results.rows.length > 0) {
+            let row = results.rows.item(0);
+            this.setState({ totalPoints : row.TotalPoints });
+            this.setState({ goalPoints : row.GoalPoints });
+          }
+        },
+        (tx, error) => {console.log(error)}
+    )});
 
     //this.setOpen = this.setOpen.bind(this);
     this.setValue = this.setValue.bind(this);
     this.setState = this.setState.bind(this);
-
-    this.db = SQLite.openDatabase('MainDB.db'); 
   }
-  // mapComponent(){
-  //   const [location, setLocation] = useState(null);
-  //   const [errorMsg, setErrorMsg] = useState(null);
-  
-
-  // setOpen(open) {
-  //   this.setState({
-  //     open: !open
-  //   });
-  // }
 
   setValue(callback) {
     this.setState(state => ({
@@ -71,38 +72,62 @@ export default class JourneyRecorder extends Component {
     }));
   }
 
-  async componentDidMount() {
-    try{
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    } catch (error){
-      console.log(error);
-    }
-  }
-
+  // When 'Add journey' button is clicked
   onAddJourney() {
 
-    const { username, origin, destination } = this.state;
+    // Get the entered text fields
+    const { username, origin, destination, totalPoints, goalPoints } = this.state;
 
+    // Handle empty text fields
+    if (origin === "") {
+      Alert.alert("Please enter a start location");
+      return;
+    }
+    if (destination === "") {
+      Alert.alert("Please enter an end location");
+      return;
+    }
+
+    // Give user points towards total count - update database THEN state
     this.db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE Users SET TotalPoints = ? WHERE Username = ?;',
+        [`${totalPoints + POINTS_FACTOR}`, `${username}`],
+        (tx, results) => { },
+        (tx, error) => {console.log(error)}
+        );
+      }
+    );
 
-      // If username or email is taken, sign up will fail as the unique constraint is violated
+    // Give user points towards goal count - update database THEN state
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE Users SET GoalPoints = ? WHERE Username = ?;',
+        [`${goalPoints + POINTS_FACTOR}`, `${username}`],
+        (tx, results) => { },
+        (tx, error) => {console.log(error)}
+        );
+      }
+    );
+
+    this.setState({ totalPoints : totalPoints + POINTS_FACTOR });
+    this.setState({ goalPoints : goalPoints + POINTS_FACTOR });
+    
+    // Insert journey into the Journeys table with the corresponding user
+    // Then go back to Welcome screen
+    this.db.transaction(tx => {
       tx.executeSql(
         `INSERT INTO Journeys (JID, Username, Origin, Destination, Mode) VALUES (NULL,?,?,?,?)`,
         [`${username}`, `${origin}`, `${destination}`, `someMode`],
 
         (tx, results) => {
-          console.log('Created', results.rowsAffected);
+          //console.log('Created', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            Alert.alert('Journey added!');
-            this.props.navigation.navigate('Journey');
-          } else Alert.alert('No user created');
+            Alert.alert(`${POINTS_FACTOR} points received!`);
+            //this.props.navigation.navigate('WelcomeScreen');  // doesn't work
+            this.props.navigation.popToTop();
+          } else Alert.alert('No journey added');
         },
 
         (tx, error) => {console.log(error)}
@@ -112,108 +137,123 @@ export default class JourneyRecorder extends Component {
   }
 
   render() {
-    const {open, value, items, location, errorMsg} = this.state;
-    // const [location, setLocation] = useState(null);
-    // const [errorMsg, setErrorMsg] = useState(null);
-  
-    // useEffect(() => {
-    //   (async () => {
-    //     let { status } = await Location.requestForegroundPermissionsAsync();
-    //     if (status !== 'granted') {
-    //       setErrorMsg('Permission to access location was denied');
-    //       return;
-    //     }
-  
-    //     let location = await Location.getCurrentPositionAsync({});
-    //     setLocation(location);
-    //   })();
-    // }, []);
-    
+    const {open, value, items} = this.state;    
+
     return (
-      
-    <View style={styles.container}> 
-      <MapView style={styles.map}>
-        {location ? (
-          <Marker coordinate={location} title="My location">
-            <FontAwesome name="map-marker" size={40} color="#B12A5B" />
-          </Marker>
-        ):
-          <Text>{errorMsg}</Text>
-        }
-      </MapView>
-      <TextInput
-        value={this.state.origin}
-        onChangeText={(origin) => this.setState({ origin })}
-        color='white'
-        placeholder={'Enter Starting Point'}
-        placeholderTextColor='white'
-        style={styles.input}
-      />
+      <View style={styles.container}> 
+        <MapView style={styles.map}
+        zoomEnabled={true}
+        scrollEnabled={true}
+        showsScale={true}
+        initialRegion={{
+          latitude: -27.495431,
+          longitude: 153.01203,
+          latitudeDelta: 0.0122, //previous num 0.0922
+          longitudeDelta: 0.0121,//previous num 0.0421
+        }}>
 
-      <TextInput
-        value={this.state.destination}
-        onChangeText={(destination) => this.setState({ destination })}
-        color='white'
-        placeholder={'Enter Destination'}
-        placeholderTextColor='white'
-        style={styles.input}
-      />
-
-      <DropDownPicker style={styles.dropdown}
-        placeholder="Select a transportation mode"
-        open={open}
-        value={value}
-        items={items}
-        setOpen={() => this.setState({ open: !open })}
-        setValue={this.setValue}
-        setItems={this.setItems}
-        onPress={() => this.setState({ open: !open })}
-      />
-
-      <Button
-        title={'Add journey'}
-        style={styles.input}
-        onPress={() => this.onAddJourney()}
-      />
-    </View>
+        <MapView.Marker
+          coordinate={{ latitude : -27.495431, longitude : 153.01203 }}
+          title={"University of Queensland"}
+          description={"Queensland's No.1 University"}
+        />
+        </MapView>
+        <View style={styles.content}>
+        <TextInput
+          value={this.state.origin}
+          onChangeText={(origin) => this.setState({ origin })}
+          color='white'
+          placeholder={'Enter Starting Point'}
+          placeholderTextColor='white'
+          style={styles.input}
+        />
+        <TextInput
+          value={this.state.destination}
+          onChangeText={(destination) => this.setState({ destination })}
+          placeholder={'Enter Destination'}
+          color='white'
+          placeholderTextColor='white'
+          style={styles.input}
+        />
+        <View>
+          <DropDownPicker style={styles.dropdown}
+            placeholder="Transportation Mode"
+            color='white'
+            placeholderStyle={{color:'white',textAlign:'center'}}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={() => this.setState({ open: !open })}
+            setValue={this.setValue}
+            setItems={this.setItems}
+            onPress={() => this.setState({ open: !open })}
+            listItemContainerStyle={{backgroundColor:'#707070'}}
+            listItemLabelStyle={{color:'white'}}
+            selectedItemLabelStyle={{color:'white'}}
+            
+          />
+        </View>
+        <TouchableOpacity 
+            activeOpacity={0.5}
+            style={styles.btn}
+            onPress={() => this.onAddJourney()}
+            >
+              <Text style={{fontSize:45,color:'white',fontWeight:'bold',textAlign:'center'}}>
+              +
+              </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }
 
+const styles = StyleSheet.create({
 
-  const styles = StyleSheet.create({
-  
-    heading: {
-      color: 'white',
-      marginBottom: 100,
-      fontSize: 40,
-      fontFamily: 'Helvetica',
-      fontWeight: 'bold',
-    },
-  
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'black',
-    },
-  
-    input: {
-      width: 200,
-      height: 44,
-      padding: 10,
-      borderWidth: 1,
-      borderColor: 'white',
-      marginBottom: 10,
-    },
-    
-    dropdown: {
-      backgroundColor: "crimson"
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#11DB8F',
+    alignItems:'center',
+  },
 
-    map: {
-      marginBottom: 30,
-      width: 500,
-      height: 250,
-    },
-  });
+  map: {
+    flex:1,
+    width: 500,
+    height: 300,
+  },
+
+  input: {
+    width: 180,
+    height: 50,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor:'#11DB8F',
+    textAlign:'center',
+    marginBottom:15
+  },
+  
+  dropdown: {
+    backgroundColor: "#11DB8F",
+    borderRadius: 20,
+    width:180,
+    borderWidth:0
+  },
+
+  content: {
+    width:'100%',
+    padding:20,
+    alignItems:'center',
+    backgroundColor:'#707070'
+  },
+
+  btn: {
+    marginTop:90,
+    width: 100,
+    height: 60,
+    borderRadius: 20,
+    backgroundColor:'#11DB8F',
+    alignItems:'center',
+    justifyContent:'center'
+  }
+  
+});

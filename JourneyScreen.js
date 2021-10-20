@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TextInput, View, StyleSheet, RecyclerViewBackedScrollViewBase } from 'react-native';
-import * as SQLite from 'expo-sqlite';  // will use for functionality
+import * as SQLite from 'expo-sqlite';
 
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import { Header } from 'react-native/Libraries/NewAppScreen';
 
-
+// REDUNDANT - for reference only
 export default class JourneyScreen extends Component {
 
   constructor(props) {

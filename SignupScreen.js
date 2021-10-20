@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
 import logo from './assets/images/icon.png';
 import { CheckBox } from 'react-native-elements'; 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { Header } from 'react-native/Libraries/NewAppScreen';
-
-
+// Signup can be accessed from LoginScreen
 export default class SignupScreen extends Component {
 
     constructor(props) {
@@ -26,16 +23,13 @@ export default class SignupScreen extends Component {
       };
 
       this.db = SQLite.openDatabase('MainDB.db');
-
     }
-
 
     // When Sign Up button is clicked
     onSignup() {
       const { email, username, password, confirmPassword, fname, lname, checked } = this.state;
 
-      // Check for empty text fields
-      // Comment out if you find it annoying
+      // Check if text fields are empty - everything must be filled
       if (email === '') {
         Alert.alert('Please enter your email');
         return;
@@ -88,7 +82,7 @@ export default class SignupScreen extends Component {
 
       // Check if username already exists
       // Note: the remaining code will still run if username already exists, but the signup will
-      // just fail because of the unique constraint.
+      // simply fail because of the unique constraint.
       this.db.transaction(tx => {
         tx.executeSql(
           `SELECT * FROM Users WHERE Username = '${username}'`, [],
@@ -106,14 +100,14 @@ export default class SignupScreen extends Component {
 
         // If username or email is taken, sign up will fail as the unique constraint is violated
         tx.executeSql(
-          `INSERT INTO Users (UID, Email, Username, Password, FName, LName, TotalCO2, RewardPoints) VALUES (NULL,?,?,?,?,?,?,?)`,
+          `INSERT INTO Users (UID, Email, Username, Password, FName, LName, TotalPoints, GoalPoints) VALUES (NULL,?,?,?,?,?,?,?)`,
           [`${email}`, `${username}`, `${password}`, `${fname}`, `${lname}`, 0, 0],
 
           (tx, results) => {
             //console.log('Created', results.rowsAffected, 'user');
             if (results.rowsAffected > 0) {
               Alert.alert('Registration complete!');
-              this.props.navigation.navigate('Home')  // go back to LoginScreen
+              this.props.navigation.navigate('Login')  // go back to LoginScreen
             } else Alert.alert('No user created');
           },
   
@@ -123,14 +117,12 @@ export default class SignupScreen extends Component {
       );
     }
 
-
     render() {
       
       return (
-  
         <ScrollView contentContainerStyle={styles.container}> 
-          <Image source={logo} style={{ width: 120, height: 150 }} /> 
-          <Text style={styles.heading}>CO2 Visualiser</Text>
+          <Image source={logo} style={{ width: 120, height: 150}} /> 
+          <Text style={styles.heading}>Light Feet</Text>
           <TextInput
             value={this.state.email}
             onChangeText={(email) => this.setState({ email })}
@@ -182,28 +174,29 @@ export default class SignupScreen extends Component {
             style={styles.input}
           />
           <CheckBox 
-            title={<Text style={{color: 'white', fontWeight: 'bold'}}>I agree with the Terms & Conditions</Text>}
+            title={<Text style={{color: 'white', fontWeight: 'normal'}}>I agree with the Terms & Conditions</Text>}
             checked={this.state.checked}
-            containerStyle ={{backgroundColor: 'transparent'}}
+            containerStyle ={{backgroundColor: 'transparent',borderWidth:0,marginTop:-10}}
             onPress={() => this.setState({ checked: !this.state.checked })}
           />
-          <Button
-            title={'Sign Up'}
-            style={styles.input}
-            onPress={this.onSignup.bind(this)}
-          />
+          <TouchableOpacity 
+              activeOpacity={0.5}
+              style={styles.signup}
+              onPress={this.onSignup.bind(this)}>
+                <Text style={{fontSize:16,color:'white',fontWeight:'bold'}}>
+                  Sign up
+                </Text>
+            </TouchableOpacity>
       </ScrollView>
-  
       );
     }
   }
-
 
   const styles = StyleSheet.create({
   
     heading: {
       color: 'white',
-      marginBottom: 30,
+      marginBottom: 50,
       fontSize: 40,
       fontFamily: 'Helvetica',
       fontWeight: 'bold',
@@ -217,12 +210,25 @@ export default class SignupScreen extends Component {
     },
   
     input: {
-      width: 200,
-      height: 44,
+      width: 260,
+      height: 40,
       padding: 10,
       borderWidth: 1,
       borderColor: 'white',
       marginBottom: 10,
+      borderRadius:20,
     },
-  
+    
+    signup: {
+      width: 200,
+      height: 40,
+      padding: 10,
+      borderWidth: 1,
+      marginTop:20,
+      backgroundColor:'skyblue',
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+
   });
