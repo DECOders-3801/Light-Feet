@@ -5,8 +5,8 @@ import { VictoryPie } from 'victory-native';
 import * as SQLite from 'expo-sqlite';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const POINTS_FACTOR = 100;  // Points obtained per journey
-const MAX_POINTS = 1000;     // Number of points until the bar is filled
+//const POINTS_FACTOR = 100;  // Points obtained per journey
+const MAX_POINTS = 500;     // Number of points until the bar is filled
 const BONUS_POINTS = 200;   // Bonus points received when the bar is filled
 
 // Appears after logging in
@@ -40,6 +40,7 @@ export default class WelcomeScreen extends Component {
 
   }
 
+  // Check if goal reached for bonus points
   componentDidUpdate() {
     const { username } = this.state;
 
@@ -48,7 +49,7 @@ export default class WelcomeScreen extends Component {
       Alert.alert("Goal reached! 200 bonus points obtained");
 
       // Give bonus points
-      this.setState({ totalPoints: this.state.totalPoints + 2 * POINTS_FACTOR });
+      this.setState({ totalPoints: this.state.totalPoints + BONUS_POINTS });
       this.db.transaction(tx => {
         tx.executeSql(
           `UPDATE Users SET TotalPoints = TotalPoints + ${BONUS_POINTS} WHERE Username = '${username}';`, 
@@ -59,7 +60,6 @@ export default class WelcomeScreen extends Component {
 
       // Reset goal points to 0 (both state variable and database)
       this.setState({ goalPoints: 0 });
-      //this.setState({ goalPoints : 0 });
       this.db.transaction(tx => {
         tx.executeSql(
           `UPDATE Users SET GoalPoints = 0 WHERE Username = '${this.state.username}';`, [],
@@ -118,9 +118,9 @@ export default class WelcomeScreen extends Component {
                         position:'absolute', paddingTop:200}}>
             {MAX_POINTS - goalPoints} points to go
           </Text>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:14, flex:-1, paddingVertical:200, 
+          <Text style={{color:'white', fontWeight:'bold', fontSize:16, flex:-1, paddingVertical:200, 
                         position:'absolute', paddingTop:510}}>
-            Reach the goal for bonus {BONUS_POINTS} points!
+            Reach the goal for {BONUS_POINTS} bonus points!
           </Text>
           <VictoryPie
             //standalone={false}

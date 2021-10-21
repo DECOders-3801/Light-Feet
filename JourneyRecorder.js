@@ -7,7 +7,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { NavigationContainer } from '@react-navigation/native';
 import { color } from 'react-native-reanimated';
 
-const POINTS_FACTOR = 100;  // How many points obtained per journey
+const POINTS_FACTOR = 100;  // How many points obtained per journey (not including bonus points)
 
 // Appears when Start button is clicked on the welcome screen
 export default class JourneyRecorder extends Component {
@@ -50,6 +50,7 @@ export default class JourneyRecorder extends Component {
             let row = results.rows.item(0);
             this.state.totalPoints = row.TotalPoints;
             this.state.goalPoints = row.GoalPoints;
+            // Don't use setState in constructor
             //this.setState({ totalPoints : row.TotalPoints });
             //this.setState({ goalPoints : row.GoalPoints });
           }
@@ -131,8 +132,8 @@ export default class JourneyRecorder extends Component {
       }
     );
 
-    this.setState({ totalPoints : totalPoints + POINTS_FACTOR });
-    this.setState({ goalPoints : goalPoints + POINTS_FACTOR });
+    this.setState({ totalPoints: totalPoints + POINTS_FACTOR });
+    this.setState({ goalPoints: goalPoints + POINTS_FACTOR });
 
     //this.props.navigation.navigate('WelcomeScreen');  // doesn't work
     this.props.navigation.popToTop();
@@ -200,7 +201,7 @@ export default class JourneyRecorder extends Component {
             style={styles.btn}
             onPress={() => this.onAddJourney()}
             >
-              <Text style={{fontSize:45,color:'white',fontWeight:'bold',textAlign:'center'}}>
+              <Text style={{fontSize:45, color:'white', fontWeight:'bold', textAlign:'center'}}>
               +
               </Text>
           </TouchableOpacity>

@@ -12,10 +12,12 @@ export default class RewardScreen extends Component {
 
   constructor(props) {
     super(props);
-    const { username } = this.props.route.params;  // Pass parameter
-    this.state = { username: username, totalPoints: 0 };
-
+    const { username, email } = this.props.route.params;  // Pass parameters
+    this.state = { username: username, email: email, totalPoints: 0 };
     this.updateData();
+
+    // When voucher is purchased
+    this.onPurchase = this.onPurchase.bind(this);
   }
 
   // Update the data when focusing on this screen again (clicking on the tab again)
@@ -25,8 +27,8 @@ export default class RewardScreen extends Component {
     });
   }
 
+  // Update total points state based on database value
   updateData() {
-    // Get total points of user
     this.db = SQLite.openDatabase('MainDB.db');
     this.db.transaction(tx => {
       tx.executeSql(
@@ -69,7 +71,7 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(300)}>
                   <Text style={styles.boxText}>
                   300 points</Text>
                 </TouchableOpacity>
@@ -81,9 +83,9 @@ export default class RewardScreen extends Component {
                   <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(500)}>
                   <Text style={styles.boxText}>
-                  600 points</Text>
+                  500 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -93,7 +95,7 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(300)}>
                   <Text style={styles.boxText}>
                   300 points</Text>
                 </TouchableOpacity>
@@ -105,9 +107,9 @@ export default class RewardScreen extends Component {
                   <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(500)}>
                   <Text style={styles.boxText}>
-                  600 points</Text>
+                  500 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -117,7 +119,7 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(300)}>
                   <Text style={styles.boxText}>
                   300 points</Text>
                 </TouchableOpacity>
@@ -129,9 +131,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(500)}>
                   <Text style={styles.boxText}>
-                  550 points</Text>
+                  500 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -141,9 +143,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(700)}>
                   <Text style={styles.boxText}>
-                  800 points</Text>
+                  700 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -153,9 +155,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(900)}>
                   <Text style={styles.boxText}>
-                  2000 points</Text>
+                  900 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -165,9 +167,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(1700)}>
                   <Text style={styles.boxText}>
-                  3000 points</Text>
+                  1700 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -177,9 +179,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(3000)}>
                   <Text style={styles.boxText}>
-                  5000 points</Text>
+                  3000 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -189,9 +191,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(500)}>
                   <Text style={styles.boxText}>
-                  1000 points</Text>
+                  500 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -201,9 +203,9 @@ export default class RewardScreen extends Component {
                 <TouchableOpacity 
                   activeOpacity={0.5}
                   style={styles.btn}
-                  onPress={this.onPurchase.bind(this)}>
+                  onPress={() => this.onPurchase(900)}>
                   <Text style={styles.boxText}>
-                  2000 points</Text>
+                  900 points</Text>
                 </TouchableOpacity>
               </View>
 
@@ -216,7 +218,22 @@ export default class RewardScreen extends Component {
 
   // When a voucher is purchased
   onPurchase(cost) {
-    Alert.alert('Congrats!','Please check out the voucher in your wallet!');
+    Alert.alert(`Congrats! Please check your inbox: ${this.state.email}`);
+
+    // Update total points state
+    this.setState({totalPoints: this.state.totalPoints - cost});
+
+    // Update total points in database
+    this.db = SQLite.openDatabase('MainDB.db');
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE Users SET TotalPoints = ? WHERE Username = ?;',
+        [`${this.state.totalPoints}`, `${this.state.username}`],
+        (tx, results) => { },
+        (tx, error) => {console.log(error)}
+        );
+      }
+    );
   }
 }
 
