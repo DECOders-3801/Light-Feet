@@ -15,11 +15,22 @@ export default class RewardScreen extends Component {
     const { username } = this.props.route.params;  // Pass parameter
     this.state = { username: username, totalPoints: 0 };
 
+    this.updateData();
+  }
+
+  // Update the data when focusing on this screen again (clicking on the tab again)
+  componentDidMount(){
+    this.subscribe = this.props.navigation.addListener('tabPress', () => {
+      this.updateData();
+    });
+  }
+
+  updateData() {
     // Get total points of user
     this.db = SQLite.openDatabase('MainDB.db');
     this.db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM Users WHERE Username = '${username}';`, [],
+        `SELECT * FROM Users WHERE Username = '${this.state.username}';`, [],
         (tx, results) => {
           if (results.rows.length > 0) {
             let row = results.rows.item(0);

@@ -15,16 +15,72 @@ export default class WelcomeScreen extends Component {
 
   constructor(props) {
     super(props);
-    //const { username } = this.props.route.params
+    
     // Pass parameters
     const { username } = this.props.navigation.state.params;
+    //const { username } = this.props.route.params
 
     // User data - points are retrieved from database later on
     this.state = { email: '', username: username, fname: '', lname: '', totalPoints: 0, goalPoints: 0 };
+    this.updateData();
+
+    //console.log(this.state.goalPoints);
+
+    // OLD VERSION
+    // this.db.transaction(tx => {
+    //   tx.executeSql(
+    //     `SELECT * FROM Journeys WHERE Username = '${username}';`, [],
+    //     (tx, results) => {
+    //       this.setState({goalPoints : results.rows.length * POINTS_FACTOR});
+    //     },
+        
+    //     (tx, error) => {console.log(error)}
+    //     );
+    // });
+
+  }
+
+  componentDidUpdate() {
+    const { username } = this.state;
+
+    // Maximum goal points reached - update total points and goal points
+    if (this.state.goalPoints >= MAX_POINTS) {
+      Alert.alert("Goal reached! 200 bonus points obtained");
+
+      // Give bonus points
+      this.setState({ totalPoints: this.state.totalPoints + 2 * POINTS_FACTOR });
+      this.db.transaction(tx => {
+        tx.executeSql(
+          `UPDATE Users SET TotalPoints = TotalPoints + ${BONUS_POINTS} WHERE Username = '${username}';`, 
+          [],
+          (tx, results) => { },
+          (tx, error) => { console.log(error) }
+      )});
+
+      // Reset goal points to 0 (both state variable and database)
+      this.setState({ goalPoints: 0 });
+      //this.setState({ goalPoints : 0 });
+      this.db.transaction(tx => {
+        tx.executeSql(
+          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${this.state.username}';`, [],
+          (tx, results) => { },
+          (tx, error) => { console.log(error) }
+      )});
+    }
+  }
+
+  // Update the data when focusing on this screen again (going back from JourneyRecorder)
+  componentDidMount(){
+    this.subscribe = this.props.navigation.addListener('didFocus', () => {
+      this.updateData();
+    });
+  }
+
+  // Update states based on the database entry for the user
+  updateData() {
+    const { username, totalPoints, goalPoints } = this.state;
 
     this.db = SQLite.openDatabase('MainDB.db');
-
-    // Show goal points
     this.db.transaction(tx => {
       tx.executeSql(
         `SELECT * FROM Users WHERE Username = '${username}';`, [],
@@ -38,52 +94,6 @@ export default class WelcomeScreen extends Component {
         },
         (tx, error) => {console.log(error)}
     )});
-
-    //console.log(this.state.goalPoints);
-
-    // OLD VERSION
-
-    // this.db.transaction(tx => {
-    //   tx.executeSql(
-    //     `SELECT * FROM Journeys WHERE Username = '${username}';`, [],
-    //     (tx, results) => {
-    //       this.setState({goalPoints : results.rows.length * POINTS_FACTOR});
-    //     },
-        
-    //     (tx, error) => {console.log(error)}
-    //     );
-    // });
-      
-  }
-
-  // After constructor, check if goal points has been maxed
-  componentDidUpdate() {
-    const { username, totalPoints, goalPoints } = this.state;
-
-    // Maximum goal points reached - update total points and goal points
-    if (goalPoints >= MAX_POINTS) {
-      Alert.alert("Goal reached! 200 bonus points obtained");
-
-      // Give bonus points
-      this.setState({ totalPoints: totalPoints + 2 * POINTS_FACTOR });
-      this.db.transaction(tx => {
-        tx.executeSql(
-          `UPDATE Users SET TotalPoints = TotalPoints + ${ BONUS_POINTS } WHERE Username = '${username}';`, 
-          [],
-          (tx, results) => { },
-          (tx, error) => { console.log(error) }
-      )});
-
-      // Reset goal points to 0 (both state variable and database)
-      this.setState({ goalPoints: 0 });
-      //this.setState({ goalPoints : 0 });
-      this.db.transaction(tx => {
-        tx.executeSql(
-          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${username}';`, [],
-          (tx, results) => { },
-          (tx, error) => { console.log(error) }
-      )});
-    }
   }
 
   render() {
@@ -104,13 +114,13 @@ export default class WelcomeScreen extends Component {
           </Text>
         </View>
         <View style={styles.content}>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:28, flex:-1, paddingVertical:200, 
+          <Text style={{color:'white', fontWeight:'bold', fontSize:21, flex:-1, paddingVertical:200, 
                         position:'absolute', paddingTop:200}}>
-            {goalPoints} Points
+            {MAX_POINTS - goalPoints} points to go
           </Text>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:17, flex:-1, paddingVertical:200, 
-                        position:'absolute', paddingTop:500}}>
-            {MAX_POINTS - goalPoints} until the bonus {BONUS_POINTS} points!
+          <Text style={{color:'white', fontWeight:'bold', fontSize:14, flex:-1, paddingVertical:200, 
+                        position:'absolute', paddingTop:510}}>
+            Reach the goal for bonus {BONUS_POINTS} points!
           </Text>
           <VictoryPie
             //standalone={false}

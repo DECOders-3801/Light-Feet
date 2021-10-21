@@ -13,17 +13,29 @@ export default class HistoryScreen extends Component {
     this.state = {
       tableHead: ['Start', 'End', 'Mode'],
       widthArr: [120, 120, 120],
-      tableData: []
+      tableData: [],
+      username: ''
     }
 
-    const { username } = this.props.route.params;
+    this.state.username = this.props.route.params.username;
+    this.updateData();
+  }
 
+  // Update the data when focusing on this screen again (clicking on the tab again)
+  componentDidMount(){
+    this.subscribe = this.props.navigation.addListener('tabPress', () => {
+      this.updateData();
+    });
+  }
+
+  // Update past journeys based on database values
+  updateData() {
     this.db = SQLite.openDatabase('MainDB.db');
 
     // Get journeys for the user ordered by latest first
     this.db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM Journeys WHERE Username = ? ORDER BY JID DESC`, [`${username}`],
+        `SELECT * FROM Journeys WHERE Username = ? ORDER BY JID DESC`, [`${this.state.username}`],
         (tx, results) => {
           //console.log('Got journeys');
 
@@ -37,18 +49,12 @@ export default class HistoryScreen extends Component {
               //console.log(row.JID);
               //console.log(row.Origin);
 
-              // Get Journeys table data
+              // Get Journeys table data by pushing each row's attribute
               let dataRow = [];
               dataRow.push(row.Origin);
               dataRow.push(row.Destination);
               dataRow.push(row.Mode);
-
               data.push(dataRow);
-              //this.setState({ start: row.Origin });
-              //this.setState({ end: row.Destination });
-              //this.setState({ mode: row.Mode });
-              //this.setState({output:row.Name})
-              //this.setState((prevState) => ({ data : prevState.data.push(row.Name)}))
             }
 
             this.state.tableData = data;

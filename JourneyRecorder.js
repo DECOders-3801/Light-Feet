@@ -48,8 +48,10 @@ export default class JourneyRecorder extends Component {
         (tx, results) => {
           if (results.rows.length > 0) {
             let row = results.rows.item(0);
-            this.setState({ totalPoints : row.TotalPoints });
-            this.setState({ goalPoints : row.GoalPoints });
+            this.state.totalPoints = row.TotalPoints;
+            this.state.goalPoints = row.GoalPoints;
+            //this.setState({ totalPoints : row.TotalPoints });
+            //this.setState({ goalPoints : row.GoalPoints });
           }
         },
         (tx, error) => {console.log(error)}
@@ -110,12 +112,8 @@ export default class JourneyRecorder extends Component {
         );
       }
     );
-
-    this.setState({ totalPoints : totalPoints + POINTS_FACTOR });
-    this.setState({ goalPoints : goalPoints + POINTS_FACTOR });
     
-    // Insert journey into the Journeys table with the corresponding user
-    // Then go back to Welcome screen
+    // Insert journey into the Journeys table for the corresponding user
     this.db.transaction(tx => {
       tx.executeSql(
         `INSERT INTO Journeys (JID, Username, Origin, Destination, Mode) VALUES (NULL,?,?,?,?)`,
@@ -125,8 +123,6 @@ export default class JourneyRecorder extends Component {
           //console.log('Created', results.rowsAffected);
           if (results.rowsAffected > 0) {
             Alert.alert(`${POINTS_FACTOR} points received!`);
-            //this.props.navigation.navigate('WelcomeScreen');  // doesn't work
-            this.props.navigation.popToTop();
           } else Alert.alert('No journey added');
         },
 
@@ -134,6 +130,12 @@ export default class JourneyRecorder extends Component {
         );
       }
     );
+
+    this.setState({ totalPoints : totalPoints + POINTS_FACTOR });
+    this.setState({ goalPoints : goalPoints + POINTS_FACTOR });
+
+    //this.props.navigation.navigate('WelcomeScreen');  // doesn't work
+    this.props.navigation.popToTop();
   }
 
   render() {
