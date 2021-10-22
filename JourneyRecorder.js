@@ -25,6 +25,7 @@ export default class JourneyRecorder extends Component {
       goalPoints: 0,
 
       // Values in text fields and drop down box
+      // Value is mode of transportation
       origin: '',
       destination: '',
       value: '',

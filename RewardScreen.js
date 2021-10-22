@@ -216,24 +216,34 @@ export default class RewardScreen extends Component {
     );
   }
 
+  // Check if user has enough points to purchase the item. 
+  verifyPoints(cost) {
+    if (this.state.totalPoints < cost) {
+      Alert.alert(`Sorry! You do not have enough points to purchase this item.`);
+    } else {
+      Alert.alert(`Congrats! Please check your inbox: ${this.state.email}`);
+      return true;
+    }
+  }
+
   // When a voucher is purchased
   onPurchase(cost) {
-    Alert.alert(`Congrats! Please check your inbox: ${this.state.email}`);
+    if (this.verifyPoints(cost)) {
+      // Update total points state
+      this.setState({totalPoints: this.state.totalPoints - cost});
 
-    // Update total points state
-    this.setState({totalPoints: this.state.totalPoints - cost});
-
-    // Update total points in database
-    this.db = SQLite.openDatabase('MainDB.db');
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE Users SET TotalPoints = ? WHERE Username = ?;',
-        [`${this.state.totalPoints}`, `${this.state.username}`],
-        (tx, results) => { },
-        (tx, error) => {console.log(error)}
-        );
-      }
-    );
+      // Update total points in database
+      this.db = SQLite.openDatabase('MainDB.db');
+      this.db.transaction(tx => {
+        tx.executeSql(
+          'UPDATE Users SET TotalPoints = ? WHERE Username = ?;',
+          [`${this.state.totalPoints}`, `${this.state.username}`],
+          (tx, results) => { },
+          (tx, error) => {console.log(error)}
+          );
+        }
+      );
+    }
   }
 }
 
