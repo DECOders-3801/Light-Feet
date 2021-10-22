@@ -156,9 +156,40 @@ export default class JourneyRecorder extends Component {
         }}>
 
         <MapView.Marker
-          coordinate={{ latitude : -27.495431, longitude : 153.01203 }}
-          title={"University of Queensland"}
-          description={"Queensland's No.1 University"}
+          coordinate={{ latitude : -27.496878439852715, longitude : 153.01119664136527 }}
+          title={"Biological Sciences Library"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.49962156722759, longitude : 153.0134807719256 }}
+          title={"Hawken Building"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.49914159297527, longitude : 153.0154287724923 }}
+          title={"Lakeside Cafe"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.497483483999577, longitude : 153.01594036860072 }}
+          title={"REDROOM"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.496372272512442, longitude : 153.01234773260921 }}
+          title={"UQ Art Museum"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.49601808141903, longitude : 153.01346000981016 }}
+          title={"Central Library"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.495756268970155, longitude : 153.0159786368055 }}
+          title={"UQ Centre"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.49498810368046, longitude : 153.01627126226276 }}
+          title={"UQ Sport Aquatic Centre"}
+        />
+        <MapView.Marker
+          coordinate={{ latitude : -27.498157733035118, longitude : 153.01137504255976 }}
+          title={"Student Centre"}
         />
         </MapView>
         <View style={styles.content}>
