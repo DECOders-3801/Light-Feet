@@ -30,10 +30,10 @@ export default class JourneyRecorder extends Component {
       mode: '',
 
       open: false,
-      value: null,
+      mode: null,
       items: [
-        {label: 'Scooter', value: 'scooter'},
-        {label: 'Bike', value: 'bike'},
+        {label: 'Scooter', mode: 'scooter'},
+        {label: 'Bike', mode: 'bike'},
       ],
 
       region: null,
@@ -80,7 +80,7 @@ export default class JourneyRecorder extends Component {
   onAddJourney() {
 
     // Get the entered text fields
-    const { username, origin, destination, totalPoints, goalPoints } = this.state;
+    const { username, origin, destination, totalPoints, value, goalPoints } = this.state;
 
     // Handle empty text fields
     if (origin === "") {
@@ -118,7 +118,7 @@ export default class JourneyRecorder extends Component {
     this.db.transaction(tx => {
       tx.executeSql(
         `INSERT INTO Journeys (JID, Username, Origin, Destination, Mode) VALUES (NULL,?,?,?,?)`,
-        [`${username}`, `${origin}`, `${destination}`, `someMode`],
+        [`${username}`, `${origin}`, `${destination}`, `${mode}`],
 
         (tx, results) => {
           //console.log('Created', results.rowsAffected);
@@ -215,16 +215,17 @@ export default class JourneyRecorder extends Component {
             color='white'
             placeholderStyle={{color:'white',textAlign:'center'}}
             open={open}
-            value={value}
-            items={items}
+            mode={this.state.value}
+            items={this.state.items}
             setOpen={() => this.setState({ open: !open })}
-            setValue={this.setValue}
+            setMode={this.setValue}
             setItems={this.setItems}
+            onChangeValue={(mode) => this.setState({ mode })}
             onPress={() => this.setState({ open: !open })}
             listItemContainerStyle={{backgroundColor:'#707070'}}
             listItemLabelStyle={{color:'white'}}
             selectedItemLabelStyle={{color:'white'}}
-            
+            containerStyle={{width: 180}}
           />
         </View>
         <TouchableOpacity 
