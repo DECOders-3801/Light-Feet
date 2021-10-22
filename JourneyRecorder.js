@@ -27,13 +27,19 @@ export default class JourneyRecorder extends Component {
       // Values in text fields and drop down box
       origin: '',
       destination: '',
-      mode: '',
+      value: '',
 
       open: false,
-      mode: null,
+      value: null,
       items: [
-        {label: 'Scooter', mode: 'scooter'},
-        {label: 'Bike', mode: 'bike'},
+        // Can only do 4 at most, can't scroll to access the rest, bottom
+        // navigator blocks it
+        {label: 'Walking', value: 'Walking'},
+        {label: 'Bike', value: 'Bike'},
+        {label: 'Scooter', value: 'Scooter'},
+        {label: 'Train', value: 'Train'},
+        //{label: 'Bus', value: 'Bus'},
+        //{label: 'Carpool', value: 'Carpool'}
       ],
 
       region: null,
@@ -118,7 +124,7 @@ export default class JourneyRecorder extends Component {
     this.db.transaction(tx => {
       tx.executeSql(
         `INSERT INTO Journeys (JID, Username, Origin, Destination, Mode) VALUES (NULL,?,?,?,?)`,
-        [`${username}`, `${origin}`, `${destination}`, `${mode}`],
+        [`${username}`, `${origin}`, `${destination}`, `${value}`],
 
         (tx, results) => {
           //console.log('Created', results.rowsAffected);
@@ -215,12 +221,12 @@ export default class JourneyRecorder extends Component {
             color='white'
             placeholderStyle={{color:'white',textAlign:'center'}}
             open={open}
-            mode={this.state.value}
+            value={this.state.value}
             items={this.state.items}
             setOpen={() => this.setState({ open: !open })}
-            setMode={this.setValue}
+            setValue={this.setValue}
             setItems={this.setItems}
-            onChangeValue={(mode) => this.setState({ mode })}
+            onChangeValue={(value) => this.setState({ value })}
             onPress={() => this.setState({ open: !open })}
             listItemContainerStyle={{backgroundColor:'#707070'}}
             listItemLabelStyle={{color:'white'}}
