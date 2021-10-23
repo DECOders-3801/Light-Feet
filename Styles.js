@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-// Contains styles for commonly used touchable opacities (buttons), text and text boxes
+// Contains styles for commonly used JSX elements
 export default styles = StyleSheet.create({
 
   // For blue buttons such as 'Login' and 'Signup'
