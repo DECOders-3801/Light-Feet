@@ -63,7 +63,7 @@ export default class ProfileScreen extends Component {
         </View>
         <TouchableOpacity 
           activeOpacity={0.5}
-          style={styles.logout}
+          style={styles.redBtn}
           onPress={() => Restart()}>
             <Text style={{fontSize:18, color:'white', fontWeight:'bold'}}>
               Log Out
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
 
-  logout: {
+  redBtn: {
     width: 200,
     height: 50,
     padding: 10,

@@ -232,7 +232,7 @@ export default class JourneyRecorder extends Component {
               setItems={this.setItems}
               onChangeValue={(value) => this.setState({ value })}
               onPress={() => this.setState({ open: !open })}
-              listItemContainerStyle={{backgroundColor: '#707070'}}
+              listItemContainerStyle={{backgroundColor: '#11DB8F'}}
               listItemLabelStyle={{color: 'white'}}
               selectedItemLabelStyle={{color: 'white'}}
               containerStyle={{width: 180}}

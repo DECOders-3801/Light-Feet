@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
-import { color } from 'react-native-reanimated';
-import { Table, TableWrapper, Row } from 'react-native-table-component';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { Table, Row } from 'react-native-table-component';
 import * as SQLite from 'expo-sqlite';
 
 const MAX_ROWS = 50;    // Up to how many past journeys to display
@@ -17,21 +16,29 @@ export default class HistoryScreen extends Component {
       username: ''
     }
 
+    // Pass parameter
     this.state.username = this.props.route.params.username;
+
+    this.db = SQLite.openDatabase('MainDB.db');
     this.updateData();
   }
 
   // Update the data when focusing on this screen again (clicking on the tab again)
   componentDidMount(){
-    this.subscribe = this.props.navigation.addListener('tabPress', () => {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.updateData();
+      //this.props.navigation.navigate("History");
     });
   }
 
+  // Not needed
+  // // Remove listener
+  // componentWillUnmount() {
+  //   this._unsubscribe();
+  // }
+
   // Update past journeys based on database values
   updateData() {
-    this.db = SQLite.openDatabase('MainDB.db');
-
     // Get journeys for the user ordered by latest first
     this.db.transaction(tx => {
       tx.executeSql(
@@ -42,8 +49,11 @@ export default class HistoryScreen extends Component {
           var len = results.rows.length;
           if (len > 0) {
 
-            var data = [];
+            //var data = [];
+            this.state.tableData = [];
             // Get all rows up to 50 at most
+            //console.log(len);
+            //console.log(Math.min(len, MAX_ROWS));
             for (let i = 0; i < Math.min(len, MAX_ROWS); i++) {
               let row = results.rows.item(i);
               //console.log(row.JID);
@@ -54,15 +64,29 @@ export default class HistoryScreen extends Component {
               dataRow.push(row.Origin);
               dataRow.push(row.Destination);
               dataRow.push(row.Mode);
-              data.push(dataRow);
+              this.state.tableData.push(dataRow);
             }
 
-            this.state.tableData = data;
+            //this.state.tableData = data;
           }
         },
         (tx, error) => {console.log(error)}
         );
       }
+    );
+  }
+
+  // Removes journeys from database for the user and updates the state accordingly
+  clearData() {
+    this.db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM Journeys WHERE Username = ?`, [`${this.state.username}`],
+        (tx, results) => {
+          this.setState({tableData: []});
+        }
+      )
+    },
+      (tx, error) => {console.log(error)}
     );
   }
 
@@ -75,32 +99,41 @@ export default class HistoryScreen extends Component {
           <Text style={styles.header}>
             History
           </Text>
-          <Text style={{color:'white', fontSize:20, textAlign:'center', marginBottom:20}}>
-            Here are your past journeys
+          <Text style={{color: 'white', fontSize: 18, textAlign: 'center', marginBottom: 20}}>
+            Here are your past journeys (up to 50)
           </Text>
+
+          <TouchableOpacity 
+            activeOpacity={0.5}
+            style={styles.redBtn}
+            onPress={() => this.clearData()}
+            >
+            <Text style={{fontSize: 18, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
+            Clear history
+            </Text>
+          </TouchableOpacity>
         </View>
         
-          <View>
+        <View>
+          <Table borderStyle={{borderColor: '#C1C0B9'}}>
+            <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
+          </Table>
+          <ScrollView style={styles.dataWrapper}>
             <Table borderStyle={{borderColor: '#C1C0B9'}}>
-              <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
+              {
+                this.state.tableData.map((dataRow, index) => (
+                  <Row
+                    key={index}
+                    data={dataRow}
+                    widthArr={state.widthArr}
+                    style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
+                    textStyle={styles.contentText}
+                  />
+                ))
+              }
             </Table>
-            <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderColor: '#C1C0B9'}}>
-                {
-                  this.state.tableData.map((dataRow, index) => (
-                    <Row
-                      key={index}
-                      data={dataRow}
-                      widthArr={state.widthArr}
-                      style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
-                      textStyle={styles.contentText}
-                    />
-                  ))
-                }
-              </Table>
-            </ScrollView>
-          </View>
-        
+          </ScrollView>
+        </View>
       </SafeAreaView>
     )
   }
@@ -114,6 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems:'center'
   },
+  
   header:{
     color:'white',
     fontSize:40,
@@ -148,5 +182,18 @@ const styles = StyleSheet.create({
   row: { 
     height: 50, 
     backgroundColor: '#F7F8FA' 
+  },
+
+  redBtn: {
+    width: 200,
+    height: 50,
+    padding: 10,
+    borderWidth: 1,
+    backgroundColor:'red',
+    borderRadius: 20,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal:100
   }
 });
