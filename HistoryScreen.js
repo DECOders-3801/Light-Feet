@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { Table, Row } from 'react-native-table-component';
+import { Table, Row, TableWrapper } from 'react-native-table-component';
 import * as SQLite from 'expo-sqlite';
 
 const MAX_ROWS = 50;    // Up to how many past journeys to display
@@ -119,18 +119,18 @@ export default class HistoryScreen extends Component {
             <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
           </Table>
           <ScrollView style={styles.dataWrapper}>
-            <Table borderStyle={{borderColor: '#C1C0B9'}}>
-              {
-                this.state.tableData.map((dataRow, index) => (
-                  <Row
-                    key={index}
-                    data={dataRow}
-                    widthArr={state.widthArr}
-                    style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
-                    textStyle={styles.contentText}
-                  />
-                ))
-              }
+            <Table borderStyle={{borderColor: '#C1C0B9', borderWidth: 2}}>
+                {
+                  this.state.tableData.map((dataRow, index) => (
+                    <Row
+                      key={index}
+                      data={dataRow}
+                      widthArr={state.widthArr}
+                      style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
+                      textStyle={styles.contentText}
+                    />
+                  ))
+                }
             </Table>
           </ScrollView>
         </View>
@@ -172,16 +172,17 @@ const styles = StyleSheet.create({
   contentText: {
     textAlign: 'center', 
     fontWeight: '200', 
-    color:'black'
+    color:'black',
   },
 
   dataWrapper: { 
-    marginTop: -1 
+    marginTop: -1,
   },
   
   row: { 
     height: 50, 
-    backgroundColor: '#F7F8FA' 
+    backgroundColor: '#F7F8FA',
+    // flex: 1
   },
 
   redBtn: {
