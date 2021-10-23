@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { VictoryPie } from 'victory-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { VictoryPie } from 'victory-native';
+
 import * as SQLite from 'expo-sqlite';
 
 import styles from './Styles.js';
@@ -115,20 +116,23 @@ export default class WelcomeScreen extends Component {
 
     return (
       <SafeAreaView style={welcomeStyles.container}>
+
         <View style={welcomeStyles.header}>
           <Text style={{color:'white', marginTop:100, fontWeight:'bold', fontSize:40, textAlign: 'center'}}>
             {welcomeText}
           </Text>
         </View>
+
         <View style={welcomeStyles.content}>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:21, flex:-1, paddingVertical:200, 
-                        position:'absolute', paddingTop:200}}>
+
+          <Text style={welcomeStyles.progressBarText}>
             {MAX_POINTS - goalPoints} points to go
           </Text>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:16, flex:-1, paddingVertical:200, 
-                        position:'absolute', paddingTop:510}}>
+
+          <Text style={welcomeStyles.explainText}>
             Reach the goal for {BONUS_POINTS} bonus points!
           </Text>
+
           <VictoryPie
             //standalone={false}
             animate={{ duration: 1000 }}
@@ -138,7 +142,9 @@ export default class WelcomeScreen extends Component {
             colorScale={graphicColor} 
             labels={() => null}
           />
+
         </View>
+
         <View>
           <TouchableOpacity 
               activeOpacity={0.5}
@@ -148,6 +154,7 @@ export default class WelcomeScreen extends Component {
                   Start</Text>
             </TouchableOpacity>
         </View>
+
       </SafeAreaView>
     );
   }
@@ -173,6 +180,26 @@ const welcomeStyles = StyleSheet.create({
   content: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  progressBarText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 21,
+    flex:-1,
+    paddingVertical: 200,
+    position: 'absolute',
+    paddingTop: 200
+  },
+
+  explainText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    flex: -1,
+    paddingVertical: 200,
+    position: 'absolute',
+    paddingTop: 510
   }
 
 });

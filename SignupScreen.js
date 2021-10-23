@@ -3,6 +3,7 @@ import { Alert, Text, TextInput, StyleSheet, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { CheckBox } from 'react-native-elements'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import * as SQLite from 'expo-sqlite';
 
 import styles from './Styles.js';
@@ -141,8 +142,13 @@ export default class SignupScreen extends Component {
       contentContainerStyle={signupStyles.container}
       resetScrollToCoords={{ x: 0, y: 0 }}
       scrollEnabled={false}> 
-        <Image source={logo} style={{ width: 120, height: 150}} /> 
-        <Text style={signupStyles.heading}>Light Feet</Text>
+
+        <Image source={logo} style={signupStyles.image} /> 
+
+        <Text style={signupStyles.heading}>
+          Light Feet
+        </Text>
+
         <TextInput
           value={this.state.email}
           onChangeText={(email) => this.setState({ email })}
@@ -193,10 +199,11 @@ export default class SignupScreen extends Component {
           placeholderTextColor='white'
           style={signupStyles.input}
         />
+
         <CheckBox 
           title={
             <Text 
-              style={{color: 'white', fontWeight: 'normal'}}>
+              style={signupStyles.checkbox}>
               I agree with the Terms & Conditions
             </Text>
           }
@@ -204,6 +211,7 @@ export default class SignupScreen extends Component {
           containerStyle ={{backgroundColor: 'transparent', borderWidth: 0}}
           onPress={() => this.setState({ checked: !this.state.checked })}
         />
+
         <TouchableOpacity 
           activeOpacity={0.5}
           style={styles.blueBtn}
@@ -212,6 +220,7 @@ export default class SignupScreen extends Component {
             Sign up
           </Text>
         </TouchableOpacity>
+        
       </KeyboardAwareScrollView>
     );
   }
@@ -219,6 +228,11 @@ export default class SignupScreen extends Component {
 
 // Styles for signup screen
 const signupStyles = StyleSheet.create({
+
+  image: {
+    width: 120,
+    height: 150
+  },
 
   heading: {
     color: 'white',
@@ -244,6 +258,11 @@ const signupStyles = StyleSheet.create({
     borderColor: 'white',
     marginBottom: 10,
     borderRadius: 20
+  },
+
+  checkbox: {
+    color: 'white', 
+    fontWeight: 'normal'
   }
 
 });

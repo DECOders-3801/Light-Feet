@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
-import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView, LogBox } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as SQLite from 'expo-sqlite';  // will use for functionality
+import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MapView from 'react-native-maps';
+
+import * as SQLite from 'expo-sqlite';
 
 const POINTS_FACTOR = 100;  // How many points obtained per journey (not including bonus points)
 
@@ -202,7 +203,9 @@ export default class JourneyRecorder extends Component {
           title={"Student Centre"}
         />
         </MapView>
+
         <View style={styles.content}>
+
           <TextInput
             value={this.state.origin}
             onChangeText={(origin) => this.setState({ origin })}
@@ -211,6 +214,7 @@ export default class JourneyRecorder extends Component {
             placeholderTextColor='white'
             style={styles.input}
           />
+
           <TextInput
             value={this.state.destination}
             onChangeText={(destination) => this.setState({ destination })}
@@ -219,6 +223,7 @@ export default class JourneyRecorder extends Component {
             placeholderTextColor='white'
             style={styles.input}
           />
+
           <View style={styles.content}>
             <DropDownPicker style={styles.dropdown}
               placeholder="Transportation Mode"
@@ -250,7 +255,9 @@ export default class JourneyRecorder extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+
         </View>
+        
       </KeyboardAwareScrollView>
     );
   }

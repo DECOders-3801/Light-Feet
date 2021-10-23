@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Table, Row } from 'react-native-table-component';
+
 import * as SQLite from 'expo-sqlite';
 
 import styles from './Styles.js';
@@ -101,6 +102,7 @@ export default class HistoryScreen extends Component {
           <Text style={historyStyles.header}>
             History
           </Text>
+
           <Text style={{color: 'white', fontSize: 18, textAlign: 'center', marginBottom: 20}}>
             Here are your past journeys (up to 50)
           </Text>
@@ -142,7 +144,9 @@ export default class HistoryScreen extends Component {
   }
 }
 
+// Styles for history screen
 const historyStyles = StyleSheet.create({
+
   container: { 
     flex: 1, 
     padding: 16, 
@@ -151,7 +155,7 @@ const historyStyles = StyleSheet.create({
     alignItems:'center'
   },
   
-  header:{
+  header: {
     color:'white',
     fontSize:40,
     textAlign:'center',
@@ -159,12 +163,12 @@ const historyStyles = StyleSheet.create({
     marginBottom:30
   },
 
-  head: { 
+  head: {
     height: 50, 
     backgroundColor: '#11DB8F' 
   },
 
-  text: { 
+  text: {
     textAlign: 'center', 
     fontWeight: 'bold', 
     color: 'white',
@@ -178,12 +182,13 @@ const historyStyles = StyleSheet.create({
     color: 'black'
   },
 
-  dataWrapper: { 
+  dataWrapper: {
     marginTop: -1 
   },
   
-  row: { 
+  row: {
     height: 50, 
     backgroundColor: '#F7F8FA' 
   }
+
 })

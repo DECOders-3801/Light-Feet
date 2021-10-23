@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { LogBox } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { LogBox } from 'react-native';
 
 import WelcomeScreen from './WelcomeScreen';
 import JourneyRecorder from './JourneyRecorder';
@@ -11,13 +11,13 @@ import JourneyRecorder from './JourneyRecorder';
 export default class HomeNavigator extends Component{
   constructor(props) {
     super(props);
-    // Suppress this error
-    LogBox.ignoreLogs(['You should only render one navigator explicitly in your app'])
+    LogBox.ignoreLogs(['You should only render one navigator explicitly in your app']);
   }
 
   render() {
     const navigator = createStackNavigator({
-      Back: {  // Renamed from Welcome so that "Back" is shown in the Journey recorder
+      // Renamed from Welcome so that "Back" is shown in the Journey recorder
+      Back: {
         screen: WelcomeScreen,
         navigationOptions: {
           headerShown: false,

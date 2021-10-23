@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Text, SafeAreaView, TouchableOpacity,View, StyleSheet } from 'react-native';
-import * as SQLite from 'expo-sqlite';
-import {Image} from 'react-native' ; 
+import { Alert, Text, SafeAreaView, TouchableOpacity,View, StyleSheet, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import * as SQLite from 'expo-sqlite';
+
 import wallet from './assets/images/wallet.png';
 
 // Screen for exchanging total points (not goal points) for rewards
@@ -52,19 +53,23 @@ export default class RewardScreen extends Component {
 
     return (
       <SafeAreaView style={{backgroundColor: 'black'}}>
-        <View style={{alignItems: 'center', justifyContent: 'center', paddingBottom:10}}>
+        <View style={{alignItems: 'center', justifyContent: 'center', paddingBottom: 10}}>
+
             <Text style={{color: 'white', fontWeight: 'bold', fontSize: 40}}>
               Rewards
-            </Text> 
+            </Text>
+
             <View style={{marginTop: 20, flexDirection: 'row'}}>
               <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, textAlign: 'center', marginTop: 20}}>
                 You have {totalPoints} points
               </Text>
+
               <TouchableOpacity 
                 activeOpacity={0.5}>
                 <Image source={wallet} style={styles.walletIcon}/>
               </TouchableOpacity>
             </View>
+
           <ScrollView style={{width: 360}}
           contentContainerStyle={{paddingBottom: 130}}>
 
@@ -269,9 +274,9 @@ const styles = StyleSheet.create({
 
   // Text style for each voucher description
   boxText: {
-    fontSize:14, 
-    color:'white', 
-    fontWeight:'normal'
+    fontSize: 14, 
+    color: 'white', 
+    fontWeight: 'normal'
   },
   
   // Button style for voucher purchase
@@ -283,7 +288,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: '#11DB8F',
-    flex:-1,
+    flex: -1,
   },
 
   contentText: {
@@ -291,12 +296,13 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 20,
-    fontWeight:'bold',
-    color:'white',
-    fontSize:14
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 14
   },
 
   walletIcon: {
-    marginLeft:20
+    marginLeft: 20
   }
+
 });

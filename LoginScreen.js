@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Text, TextInput, ScrollView, StyleSheet, Image} from 'react-native';
+import { Alert, Text, TextInput, View, StyleSheet, Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import * as SQLite from 'expo-sqlite';
 
 import logo from './assets/images/icon.png'; 
@@ -126,9 +127,14 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={loginStyles.container}> 
-        <Image source={logo} style={{ width: 120, height: 150 }} /> 
-        <Text style={loginStyles.heading}>Light Feet</Text>
+      <View style={loginStyles.container}>
+
+        <Image source={logo} style={{ width: 120, height: 150 }} />
+
+        <Text style={loginStyles.heading}>
+          Light Feet
+        </Text>
+
         <TextInput
           value={this.state.userText}
           onChangeText={(userText) => this.setState({ userText })}
@@ -137,6 +143,7 @@ export default class LoginScreen extends Component {
           placeholderTextColor='white'
           style={loginStyles.input}
         />
+
         <TextInput 
           value={this.state.passText}
           onChangeText={(passText) => this.setState({ passText })}
@@ -146,6 +153,7 @@ export default class LoginScreen extends Component {
           secureTextEntry={true}
           style={loginStyles.input}
         />
+
         <TouchableOpacity 
           activeOpacity={0.5}
           style={loginStyles.loginBtn}
@@ -154,6 +162,7 @@ export default class LoginScreen extends Component {
               Login
             </Text>
         </TouchableOpacity>
+
         <TouchableOpacity 
           activeOpacity={0.5}
           style={loginStyles.signupBtn}
@@ -163,7 +172,8 @@ export default class LoginScreen extends Component {
               Sign Up for an Account
             </Text>
         </TouchableOpacity>
-      </ScrollView>
+
+      </View>
     );
   }
 }
