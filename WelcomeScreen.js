@@ -44,14 +44,13 @@ export default class WelcomeScreen extends Component {
 
   // Check if goal reached for bonus points
   componentDidUpdate() {
-    const { username } = this.state;
+    const { username, totalPoints, goalPoints } = this.state;
 
     // Maximum goal points reached - update total points and goal points
-    if (this.state.goalPoints >= MAX_POINTS) {
+    if (goalPoints >= MAX_POINTS) {
       Alert.alert("Goal reached! 200 bonus points obtained");
 
-      // Give bonus points
-      this.setState({ totalPoints: this.state.totalPoints + BONUS_POINTS });
+      // Give bonus points (both state variable and database)
       this.db.transaction(tx => {
         tx.executeSql(
           `UPDATE Users SET TotalPoints = TotalPoints + ${BONUS_POINTS} WHERE Username = '${username}';`, 
@@ -59,15 +58,16 @@ export default class WelcomeScreen extends Component {
           (tx, results) => { },
           (tx, error) => { console.log(error) }
       )});
+      this.setState({ totalPoints: totalPoints + BONUS_POINTS });
 
       // Reset goal points to 0 (both state variable and database)
-      this.setState({ goalPoints: 0 });
       this.db.transaction(tx => {
         tx.executeSql(
-          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${this.state.username}';`, [],
+          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${username}';`, [],
           (tx, results) => { },
           (tx, error) => { console.log(error) }
       )});
+      this.setState({ goalPoints: 0 });
     }
   }
 
@@ -86,7 +86,7 @@ export default class WelcomeScreen extends Component {
 
   // Update states based on the database entry for the user
   updateData() {
-    const { username, totalPoints, goalPoints } = this.state;
+    const { username } = this.state;
 
     this.db = SQLite.openDatabase('MainDB.db');
     this.db.transaction(tx => {
@@ -105,7 +105,7 @@ export default class WelcomeScreen extends Component {
   }
 
   render() {
-    const { email, username, fname, lname, totalPoints, goalPoints } = this.state;
+    const { username, goalPoints } = this.state;
     const welcomeText = `Welcome back ${username}!`;
 
     const graphicData = [
@@ -117,8 +117,8 @@ export default class WelcomeScreen extends Component {
     return (
       <SafeAreaView style={welcomeStyles.container}>
 
-        <View style={welcomeStyles.header}>
-          <Text style={{color:'white', marginTop:100, fontWeight:'bold', fontSize:40, textAlign: 'center'}}>
+        <View style={welcomeStyles.headerContainer}>
+          <Text style={welcomeStyles.header}>
             {welcomeText}
           </Text>
         </View>
@@ -162,8 +162,14 @@ export default class WelcomeScreen extends Component {
 
 // Styles for welcome screen
 const welcomeStyles = StyleSheet.create({
-  
-  header: {
+
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+
+  headerContainer: {
     color: 'white',
     marginBottom: 20,
     fontFamily: 'Helvetica',
@@ -171,10 +177,12 @@ const welcomeStyles = StyleSheet.create({
     position:'relative',
   },
 
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'black',
+  header: {
+    color: 'white',
+    marginTop: 100,
+    fontWeight: 'bold',
+    fontSize: 40,
+    textAlign: 'center'
   },
 
   content: {
