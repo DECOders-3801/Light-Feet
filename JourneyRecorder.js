@@ -1,12 +1,9 @@
-import React, { Component, useState, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { Alert, Button, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import MapView from 'react-native-maps';
+import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as Location  from 'expo-location';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import DropDownPicker from 'react-native-dropdown-picker';
-import { NavigationContainer } from '@react-navigation/native';
-import { color } from 'react-native-reanimated';
 
 const POINTS_FACTOR = 100;  // How many points obtained per journey (not including bonus points)
 
