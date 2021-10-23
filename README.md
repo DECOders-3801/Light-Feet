@@ -1,4 +1,5 @@
 # Install
+
 If this the 1st time you are running this project:
 
 Assuming [Node.js/npm](https://nodejs.org/en/) is installed: change directory
@@ -34,7 +35,7 @@ NEW:
 npm install @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons
 npm install fiction-expo-restart
 npm install react-native-table-component
+npm install react-native-keyboard-aware-scroll-view
 ```
-
 
 # Note: Edit README.md every time we use a new library/add-on

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
 import logo from './assets/images/icon.png';
@@ -132,7 +133,10 @@ export default class SignupScreen extends Component {
   render() {
     
     return (
-      <ScrollView contentContainerStyle={styles.container}> 
+      <KeyboardAwareScrollView 
+      contentContainerStyle={styles.container}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      scrollEnabled={false}> 
         <Image source={logo} style={{ width: 120, height: 150}} /> 
         <Text style={styles.heading}>Light Feet</Text>
         <TextInput
@@ -199,7 +203,7 @@ export default class SignupScreen extends Component {
               Sign up
             </Text>
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 }
