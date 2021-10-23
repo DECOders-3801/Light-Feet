@@ -61,7 +61,8 @@ export default class RewardScreen extends Component {
                 <Image source={wallet} style={styles.walletIcon}/>
               </TouchableOpacity>
             </View>
-          <ScrollView style={{width:360}}>
+          <ScrollView style={{width:360}}
+          contentContainerStyle={{ paddingBottom: 130}}>
 
             <View style={{marginTop:10}}>
 
