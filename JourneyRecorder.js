@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
-import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView, LogBox } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SQLite from 'expo-sqlite';  // will use for functionality
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -41,8 +41,10 @@ export default class JourneyRecorder extends Component {
         //{label: 'Carpool', value: 'Carpool'}
       ],
 
-      region: null,
+      region: null
     };
+
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews']);
 
     this.db = SQLite.openDatabase('MainDB.db'); 
 
@@ -148,10 +150,10 @@ export default class JourneyRecorder extends Component {
     const {open, value, items} = this.state;    
 
     return (
-      <KeyboardAwareScrollView 
+      <KeyboardAwareScrollView
       contentContainerStyle={styles.container}
       resetScrollToCoords={{ x: 0, y: 0 }}
-      scrollEnabled={false}> 
+      scrollEnabled={false}>
         <MapView style={styles.map}
         zoomEnabled={true}
         scrollEnabled={true}
@@ -201,49 +203,49 @@ export default class JourneyRecorder extends Component {
         />
         </MapView>
         <View style={styles.content}>
-        <TextInput
-          value={this.state.origin}
-          onChangeText={(origin) => this.setState({ origin })}
-          color='white'
-          placeholder={'Enter Starting Point'}
-          placeholderTextColor='white'
-          style={styles.input}
-        />
-        <TextInput
-          value={this.state.destination}
-          onChangeText={(destination) => this.setState({ destination })}
-          placeholder={'Enter Destination'}
-          color='white'
-          placeholderTextColor='white'
-          style={styles.input}
-        />
-        <View>
-          <DropDownPicker style={styles.dropdown}
-            placeholder="Transportation Mode"
+          <TextInput
+            value={this.state.origin}
+            onChangeText={(origin) => this.setState({ origin })}
             color='white'
-            placeholderStyle={{color:'white',textAlign:'center'}}
-            open={open}
-            value={this.state.value}
-            items={this.state.items}
-            setOpen={() => this.setState({ open: !open })}
-            setValue={this.setValue}
-            setItems={this.setItems}
-            onChangeValue={(value) => this.setState({ value })}
-            onPress={() => this.setState({ open: !open })}
-            listItemContainerStyle={{backgroundColor:'#707070'}}
-            listItemLabelStyle={{color:'white'}}
-            selectedItemLabelStyle={{color:'white'}}
-            containerStyle={{width: 180}}
+            placeholder={'Enter Starting Point'}
+            placeholderTextColor='white'
+            style={styles.input}
           />
-        </View>
-        <TouchableOpacity 
+          <TextInput
+            value={this.state.destination}
+            onChangeText={(destination) => this.setState({ destination })}
+            placeholder={'Enter Destination'}
+            color='white'
+            placeholderTextColor='white'
+            style={styles.input}
+          />
+          <View>
+            <DropDownPicker style={styles.dropdown}
+              placeholder="Transportation Mode"
+              color='white'
+              placeholderStyle={{color:'white',textAlign:'center'}}
+              open={open}
+              value={this.state.value}
+              items={this.state.items}
+              setOpen={() => this.setState({ open: !open })}
+              setValue={this.setValue}
+              setItems={this.setItems}
+              onChangeValue={(value) => this.setState({ value })}
+              onPress={() => this.setState({ open: !open })}
+              listItemContainerStyle={{backgroundColor:'#707070'}}
+              listItemLabelStyle={{color:'white'}}
+              selectedItemLabelStyle={{color:'white'}}
+              containerStyle={{width: 180}}
+            />
+          </View>
+          <TouchableOpacity 
             activeOpacity={0.5}
             style={styles.btn}
             onPress={() => this.onAddJourney()}
             >
-              <Text style={{fontSize:45, color:'white', fontWeight:'bold', textAlign:'center'}}>
-              +
-              </Text>
+            <Text style={{fontSize:45, color:'white', fontWeight:'bold', textAlign:'center'}}>
+            +
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
@@ -256,11 +258,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#11DB8F',
-    alignItems:'center',
+    alignItems: 'center',
   },
 
   map: {
-    flex:1,
+    flex: 1,
     width: 500,
     height: 300,
   },
@@ -270,23 +272,23 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     borderRadius: 20,
-    backgroundColor:'#11DB8F',
-    textAlign:'center',
-    marginBottom:15
+    backgroundColor: '#11DB8F',
+    textAlign: 'center',
+    marginBottom: 15
   },
   
   dropdown: {
     backgroundColor: "#11DB8F",
     borderRadius: 20,
-    width:180,
-    borderWidth:0
+    width: 180,
+    borderWidth: 0
   },
 
   content: {
-    width:'100%',
-    padding:20,
-    alignItems:'center',
-    backgroundColor:'#707070'
+    width: '100%',
+    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#707070'
   },
 
   btn: {
@@ -294,9 +296,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 60,
     borderRadius: 20,
-    backgroundColor:'#11DB8F',
-    alignItems:'center',
-    justifyContent:'center'
+    backgroundColor: '#11DB8F',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
   
 });
