@@ -219,11 +219,11 @@ export default class JourneyRecorder extends Component {
             placeholderTextColor='white'
             style={styles.input}
           />
-          <View>
+          <View style={styles.content}>
             <DropDownPicker style={styles.dropdown}
               placeholder="Transportation Mode"
               color='white'
-              placeholderStyle={{color:'white',textAlign:'center'}}
+              placeholderStyle={{color: 'white', textAlign: 'center'}}
               open={open}
               value={this.state.value}
               items={this.state.items}
@@ -232,21 +232,24 @@ export default class JourneyRecorder extends Component {
               setItems={this.setItems}
               onChangeValue={(value) => this.setState({ value })}
               onPress={() => this.setState({ open: !open })}
-              listItemContainerStyle={{backgroundColor:'#707070'}}
-              listItemLabelStyle={{color:'white'}}
-              selectedItemLabelStyle={{color:'white'}}
+              listItemContainerStyle={{backgroundColor: '#707070'}}
+              listItemLabelStyle={{color: 'white'}}
+              selectedItemLabelStyle={{color: 'white'}}
               containerStyle={{width: 180}}
+              labelStyle={{color: 'white'}}
+              activeItemStyle={{alignItems: 'center'}}
             />
+
+            <TouchableOpacity 
+              activeOpacity={0.5}
+              style={styles.btn}
+              onPress={() => this.onAddJourney()}
+              >
+              <Text style={{fontSize: 45, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
+              +
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity 
-            activeOpacity={0.5}
-            style={styles.btn}
-            onPress={() => this.onAddJourney()}
-            >
-            <Text style={{fontSize:45, color:'white', fontWeight:'bold', textAlign:'center'}}>
-            +
-            </Text>
-          </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -281,7 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#11DB8F",
     borderRadius: 20,
     width: 180,
-    borderWidth: 0
+    borderWidth: 0,
   },
 
   content: {
