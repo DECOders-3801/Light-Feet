@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TextInput, SafeAreaView, TouchableOpacity,View, StyleSheet } from 'react-native';
-import { VictoryPie } from 'victory-native';
+import { Alert, Text, SafeAreaView, TouchableOpacity,View, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
-import logo from './assets/images/icon.png'; 
 import { ScrollView } from 'react-native-gesture-handler';
 import wallet from './assets/images/wallet.png';
 
@@ -22,10 +20,16 @@ export default class RewardScreen extends Component {
 
   // Update the data when focusing on this screen again (clicking on the tab again)
   componentDidMount(){
-    this.subscribe = this.props.navigation.addListener('tabPress', () => {
+    this._unsubscribe = this.props.navigation.addListener('tabPress', () => {
       this.updateData();
     });
   }
+
+  // Not needed
+  // // Remove listener
+  // componentWillUnmount() {
+  //   this._unsubscribe();
+  // }
 
   // Update total points state based on database value
   updateData() {
