@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TextInput, View, ScrollView, StyleSheet} from 'react-native';
-import * as SQLite from 'expo-sqlite';
-import {Image} from 'react-native' ; 
-import logo from './assets/images/icon.png'; 
+import { Alert, Text, TextInput, ScrollView, StyleSheet, Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as SQLite from 'expo-sqlite';
+
+import logo from './assets/images/icon.png'; 
 
 // Screen for logging in as a user
 // Can also access signup screen from here
@@ -114,7 +114,9 @@ export default class LoginScreen extends Component {
               goalPoints: this.state.goalPoints
             });
 
-          } else Alert.alert('Username does not exist, or password is incorrect');
+          } else {
+            Alert.alert('Please check your details again');
+          }
         },
         
         (tx, error) => {console.log(error)}
@@ -124,16 +126,16 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}> 
+      <ScrollView contentContainerStyle={loginStyles.container}> 
         <Image source={logo} style={{ width: 120, height: 150 }} /> 
-        <Text style={styles.heading}>Light Feet</Text>
+        <Text style={loginStyles.heading}>Light Feet</Text>
         <TextInput
           value={this.state.userText}
           onChangeText={(userText) => this.setState({ userText })}
           color= 'white'
           placeholder={'Username'}
           placeholderTextColor='white'
-          style={styles.input}
+          style={loginStyles.input}
         />
         <TextInput 
           value={this.state.passText}
@@ -142,21 +144,22 @@ export default class LoginScreen extends Component {
           placeholder={'Password'}
           placeholderTextColor='white'
           secureTextEntry={true}
-          style={styles.input}
+          style={loginStyles.input}
         />
         <TouchableOpacity 
           activeOpacity={0.5}
-          style={styles.login}
+          style={loginStyles.loginBtn}
           onPress={this.onLogin.bind(this)}>
-            <Text style={{fontSize:16,color:'white',fontWeight:'bold'}}>
+            <Text style={loginStyles.loginBtnText}>
               Login
             </Text>
         </TouchableOpacity>
         <TouchableOpacity 
           activeOpacity={0.5}
-          style={styles.signup}
+          style={loginStyles.signupBtn}
           onPress={() => this.props.navigation.navigate('Signup')}>
-            <Text style={{fontSize:16,color:'white',fontWeight:'normal',textDecorationLine:'underline',textDecorationColor:'white',textDecorationStyle:'dotted'}}>
+            <Text style={{fontSize: 16, color: 'white', fontWeight: 'normal', 
+              textDecorationLine: 'underline', textDecorationColor: 'white', textDecorationStyle: 'dotted'}}>
               Sign Up for an Account
             </Text>
         </TouchableOpacity>
@@ -165,21 +168,22 @@ export default class LoginScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+// Styles for login screen
+const loginStyles = StyleSheet.create({
 
   heading: {
     color: 'white',
     marginBottom: 80,
     fontSize: 40,
     fontFamily: 'Helvetica',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
 
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'black'
   },
 
   input: {
@@ -189,10 +193,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     marginBottom: 10,
-    borderRadius: 20,
+    borderRadius: 20
   },
 
-  login: {
+  loginBtn: {
     width: 200,
     height: 40,
     padding: 10,
@@ -201,14 +205,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 30,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
-  signup: {
-    width:200,
-    height:30,
-    marginTop:120,
-    alignItems: 'center',
-    justifyContent: 'center',
+  loginBtnText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: 'bold'
   },
+
+  signupBtn: {
+    width: 200,
+    height: 30,
+    marginTop: 120,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+
 });

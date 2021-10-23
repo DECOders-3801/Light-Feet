@@ -53,11 +53,11 @@ export default class RewardScreen extends Component {
     return (
       <SafeAreaView style={{backgroundColor: 'black'}}>
         <View style={{alignItems: 'center', justifyContent: 'center', paddingBottom:10}}>
-            <Text style={{color:'white', fontWeight:'bold', fontSize:40}}>
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 40}}>
               Rewards
             </Text> 
-            <View style={{marginTop:20, flexDirection:'row'}}>
-              <Text style={{color:'white', fontWeight:'bold', fontSize:16, textAlign:'center',marginTop:20}}>
+            <View style={{marginTop: 20, flexDirection: 'row'}}>
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, textAlign: 'center', marginTop: 20}}>
                 You have {totalPoints} points
               </Text>
               <TouchableOpacity 
@@ -65,10 +65,10 @@ export default class RewardScreen extends Component {
                 <Image source={wallet} style={styles.walletIcon}/>
               </TouchableOpacity>
             </View>
-          <ScrollView style={{width:360}}
-          contentContainerStyle={{ paddingBottom: 130}}>
+          <ScrollView style={{width: 360}}
+          contentContainerStyle={{paddingBottom: 130}}>
 
-            <View style={{marginTop:10}}>
+            <View style={{marginTop: 10}}>
 
               <View style={styles.box}>
                 <Text style={styles.contentText}>
@@ -252,6 +252,7 @@ export default class RewardScreen extends Component {
   }
 }
 
+// Styles for reward screen
 const styles = StyleSheet.create({
 
   // Box style for each voucher description

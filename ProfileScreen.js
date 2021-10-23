@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, Alert, StyleSheet } from 'react-native';
-import {Image} from 'react-native' ; 
+import { Text, View, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import profile from './assets/images/profile.png'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Restart } from 'fiction-expo-restart';
+
+import styles from './Styles.js';
+import profile from './assets/images/profile.png'; 
 
 // Screen for showing profile / account details
 export default class ProfileScreen extends Component {
@@ -33,39 +34,39 @@ export default class ProfileScreen extends Component {
     const { email, username, fname, lname } = this.state;
     
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={profileStyles.container}>
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Text style={{color:'white', fontSize:40, fontWeight:'bold'}}>Profile</Text>
         </View>
-        <View style={styles.head}>
-          <Image source={profile} style={styles.portrait} /> 
-          <Text style={styles.heading}>{fname} {lname}</Text>
+        <View style={profileStyles.head}>
+          <Image source={profile} style={profileStyles.portrait} /> 
+          <Text style={profileStyles.heading}>{fname} {lname}</Text>
 
         </View>
 
         <View>
-          <View style={styles.column}>
-            <Text style={styles.contentHead}>Username</Text>
-            <Text style={styles.contents}>{username}</Text>
+          <View style={profileStyles.column}>
+            <Text style={profileStyles.contentHead}>Username</Text>
+            <Text style={profileStyles.contents}>{username}</Text>
           </View>
-          <View style={styles.column}>
-            <Text style={styles.contentHead}>Email </Text>
-            <Text style={styles.contents}>{email}</Text>
+          <View style={profileStyles.column}>
+            <Text style={profileStyles.contentHead}>Email </Text>
+            <Text style={profileStyles.contents}>{email}</Text>
           </View>
-          <View style={styles.column}>
-            <Text style={styles.contentHead}>First Name</Text>
-            <Text style={styles.contents}>{fname}</Text>
+          <View style={profileStyles.column}>
+            <Text style={profileStyles.contentHead}>First Name</Text>
+            <Text style={profileStyles.contents}>{fname}</Text>
           </View>
-          <View style={styles.column}>
-            <Text style={styles.contentHead}>Last Name</Text>
-            <Text style={styles.contents}>{lname}</Text>
+          <View style={profileStyles.column}>
+            <Text style={profileStyles.contentHead}>Last Name</Text>
+            <Text style={profileStyles.contents}>{lname}</Text>
           </View>
         </View>
         <TouchableOpacity 
           activeOpacity={0.5}
           style={styles.redBtn}
           onPress={() => Restart()}>
-            <Text style={{fontSize:18, color:'white', fontWeight:'bold'}}>
+            <Text style={styles.redBtnText}>
               Log Out
             </Text>
         </TouchableOpacity>
@@ -74,7 +75,8 @@ export default class ProfileScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+// Styles for profile screen
+const profileStyles = StyleSheet.create({
 
   heading: {
     color: 'white',
@@ -89,57 +91,43 @@ const styles = StyleSheet.create({
     marginBottom: 60,
     fontWeight: 'bold',
     flexDirection:'row',
-    marginTop:20, 
-    marginLeft:40
+    marginTop: 20, 
+    marginLeft: 40
     // justifyContent: 'center'
   },
 
   walletIcon: {
-    marginTop:70,
-    marginLeft:50
+    marginTop: 70,
+    marginLeft: 50
   },
 
   column: {
-    height:70,
-    padding:5,
-    borderTopWidth:1,
-    backgroundColor:'#11DB8F',
-    borderRadius:15,
-    marginBottom:10
+    height: 70,
+    padding: 5,
+    borderTopWidth: 1,
+    backgroundColor: '#11DB8F',
+    borderRadius: 15,
+    marginBottom: 10
   },
 
   contentHead:{
-      color: 'white',
-      marginBottom: 15,
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginLeft:20
+    color: 'white',
+    marginBottom: 15,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 20
   },
 
   contents: {
-    color: 'black', 
-    fontWeight: 'bold', 
-    marginLeft:20, 
+    color: 'black',
+    //fontWeight: 'bold',
+    marginLeft: 20,
     marginBottom: 30
   },
 
   container: {
     flex: 1,
-    paddingTop: 30,
     backgroundColor: 'black'
-  },
-
-  redBtn: {
-    width: 200,
-    height: 50,
-    padding: 10,
-    borderWidth: 1,
-    backgroundColor:'red',
-    borderRadius: 20,
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal:100
   },
 
   portrait: {

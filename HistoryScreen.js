@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { Table, Row, TableWrapper } from 'react-native-table-component';
+import { Table, Row } from 'react-native-table-component';
 import * as SQLite from 'expo-sqlite';
+
+import styles from './Styles.js';
 
 const MAX_ROWS = 50;    // Up to how many past journeys to display
 
@@ -94,9 +96,9 @@ export default class HistoryScreen extends Component {
     const state = this.state;
 
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={historyStyles.container}>
         <View>
-          <Text style={styles.header}>
+          <Text style={historyStyles.header}>
             History
           </Text>
           <Text style={{color: 'white', fontSize: 18, textAlign: 'center', marginBottom: 20}}>
@@ -108,7 +110,7 @@ export default class HistoryScreen extends Component {
             style={styles.redBtn}
             onPress={() => this.clearData()}
             >
-            <Text style={{fontSize: 18, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
+            <Text style={styles.redBtnText}>
             Clear history
             </Text>
           </TouchableOpacity>
@@ -116,9 +118,10 @@ export default class HistoryScreen extends Component {
         
         <View>
           <Table borderStyle={{borderColor: '#C1C0B9'}}>
-            <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
+            <Row data={state.tableHead} widthArr={state.widthArr} 
+            style={historyStyles.head} textStyle={historyStyles.text}/>
           </Table>
-          <ScrollView style={styles.dataWrapper}>
+          <ScrollView style={historyStyles.dataWrapper}>
             <Table borderStyle={{borderColor: '#C1C0B9', borderWidth: 2}}>
                 {
                   this.state.tableData.map((dataRow, index) => (
@@ -126,8 +129,8 @@ export default class HistoryScreen extends Component {
                       key={index}
                       data={dataRow}
                       widthArr={state.widthArr}
-                      style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
-                      textStyle={styles.contentText}
+                      style={[historyStyles.row, index%2 && {backgroundColor: '#ffffff'}]}
+                      textStyle={historyStyles.contentText}
                     />
                   ))
                 }
@@ -139,7 +142,7 @@ export default class HistoryScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const historyStyles = StyleSheet.create({
   container: { 
     flex: 1, 
     padding: 16, 
@@ -164,37 +167,23 @@ const styles = StyleSheet.create({
   text: { 
     textAlign: 'center', 
     fontWeight: 'bold', 
-    color:'white',
-    fontSize:18,
-    fontWeight:'bold'
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold'
   },
 
   contentText: {
     textAlign: 'center', 
     fontWeight: '200', 
-    color:'black',
+    color: 'black'
   },
 
   dataWrapper: { 
-    marginTop: -1,
+    marginTop: -1 
   },
   
   row: { 
     height: 50, 
-    backgroundColor: '#F7F8FA',
-    // flex: 1
-  },
-
-  redBtn: {
-    width: 200,
-    height: 50,
-    padding: 10,
-    borderWidth: 1,
-    backgroundColor:'red',
-    borderRadius: 20,
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal:100
+    backgroundColor: '#F7F8FA' 
   }
-});
+})
