@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Text, TextInput, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SQLite from 'expo-sqlite';
 import {Image} from 'react-native' ; 
@@ -31,6 +31,7 @@ export default class SignupScreen extends Component {
     const { email, username, password, confirmPassword, fname, lname, checked } = this.state;
 
     // Check if text fields are empty - everything must be filled
+    // Email required for purchasing vouchers
     if (email === '') {
       Alert.alert('Please enter your email');
       return;
@@ -47,14 +48,16 @@ export default class SignupScreen extends Component {
       Alert.alert('Please confirm your password');
       return;
     }
-    if (fname === '') {
-      Alert.alert('Please enter your first name');
-      return;
-    }
-    if (lname === '') {
-      Alert.alert('Please enter your first name');
-      return;
-    }
+
+    // Don't require name for better privacy
+    // if (fname === '') {
+    //   Alert.alert('Please enter your first name');
+    //   return;
+    // }
+    // if (lname === '') {
+    //   Alert.alert('Please enter your first name');
+    //   return;
+    // }
 
     // Password does not match confirmed password
     if (password != confirmPassword) {
