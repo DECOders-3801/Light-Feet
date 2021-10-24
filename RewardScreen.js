@@ -59,12 +59,13 @@ export default class RewardScreen extends Component {
               Rewards
             </Text>
 
-            <View style={{marginTop: 20, flexDirection: 'row'}}>
-              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, textAlign: 'center', marginTop: 20}}>
+            <View style={{marginTop: 20, flexDirection: 'row', paddingBottom: 10}}>
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, 
+              textAlign: 'center', marginTop: 20}}>
                 You have {totalPoints} points
               </Text>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 activeOpacity={0.5}>
                 <Image source={wallet} style={styles.walletIcon}/>
               </TouchableOpacity>

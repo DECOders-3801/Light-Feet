@@ -23,14 +23,15 @@ export default class JourneyRecorder extends Component {
       totalPoints: 0,
       goalPoints: 0,
 
-      // Values in text fields and drop down box
-      // Value is mode of transportation
+      // To store text field inputs and drop down box
       origin: '',
       destination: '',
-      value: '',
-
-      open: false,
+      // Mode of transportation
       value: null,
+      //value: '',
+
+      // For dropdown box
+      open: false,
       items: [
         // Can only do 4 at most, can't scroll to access the rest, bottom
         // navigator blocks it
@@ -97,6 +98,11 @@ export default class JourneyRecorder extends Component {
     }
     if (destination === "") {
       Alert.alert("Please enter an end location");
+      return;
+    }
+    // Handle dropdown box not chosen
+    if (value == null) {
+      Alert.alert("Please choose a transportation mode");
       return;
     }
 
@@ -203,9 +209,7 @@ export default class JourneyRecorder extends Component {
           title={"Student Centre"}
         />
         </MapView>
-
         <View style={styles.content}>
-
           <TextInput
             value={this.state.origin}
             onChangeText={(origin) => this.setState({ origin })}
@@ -214,7 +218,6 @@ export default class JourneyRecorder extends Component {
             placeholderTextColor='white'
             style={styles.input}
           />
-
           <TextInput
             value={this.state.destination}
             onChangeText={(destination) => this.setState({ destination })}
@@ -223,7 +226,6 @@ export default class JourneyRecorder extends Component {
             placeholderTextColor='white'
             style={styles.input}
           />
-
           <View style={styles.content}>
             <DropDownPicker style={styles.dropdown}
               placeholder="Transportation Mode"
@@ -255,14 +257,13 @@ export default class JourneyRecorder extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-
         </View>
-        
       </KeyboardAwareScrollView>
     );
   }
 }
 
+// Styles for journey recorder screen
 const styles = StyleSheet.create({
 
   container: {
