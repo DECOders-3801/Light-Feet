@@ -1,3 +1,12 @@
+# Run
+
+To run the app, enter one of the following:
+```shell
+npm start
+yarn start
+expo start
+```
+
 # Install
 
 If this the 1st time you are running this project:
@@ -8,14 +17,6 @@ to the project folder and run the following commands in your terminal:
 ```shell
 npm install --global expo-cli
 npm install --global yarn
-expo install expo-sqlite
-npm install @react-navigation/native
-npm install @react-navigation/native-stack
-```
-
-If you are cloning a new version of this project:
-
-```shell
 npm install
 expo install expo-sqlite
 npm install @react-navigation/native
@@ -28,10 +29,8 @@ npm install react-native-elements
 
 npm install react-native-dropdown-picker
 npm install --save victory-native
-Alternative:
 react-native install react-native-svg
 
-NEW:
 npm install @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons
 npm install fiction-expo-restart
 npm install react-native-table-component
