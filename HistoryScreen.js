@@ -53,7 +53,7 @@ export default class HistoryScreen extends Component {
           var len = results.rows.length;
           if (len > 0) {
 
-            //var data = [];
+            var data = [];
             this.state.tableData = [];
             // Get all rows up to 50 at most
             //console.log(len);
@@ -68,10 +68,11 @@ export default class HistoryScreen extends Component {
               dataRow.push(row.Origin);
               dataRow.push(row.Destination);
               dataRow.push(row.Mode);
-              this.state.tableData.push(dataRow);
+              data.push(dataRow);
+              //this.state.tableData.push(dataRow);
             }
 
-            //this.state.tableData = data;
+            this.setState({tableData: data});
           }
         },
         (tx, error) => {console.log(error)}
