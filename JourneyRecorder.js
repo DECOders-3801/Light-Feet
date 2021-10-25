@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
-import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, ScrollView, LogBox } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as SQLite from 'expo-sqlite';  // will use for functionality
+import { Alert, Text, TextInput, View, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MapView from 'react-native-maps';
+
+import * as SQLite from 'expo-sqlite';
 
 const POINTS_FACTOR = 100;  // How many points obtained per journey (not including bonus points)
 
@@ -22,14 +23,15 @@ export default class JourneyRecorder extends Component {
       totalPoints: 0,
       goalPoints: 0,
 
-      // Values in text fields and drop down box
-      // Value is mode of transportation
+      // To store text field inputs and drop down box
       origin: '',
       destination: '',
-      value: '',
-
-      open: false,
+      // Mode of transportation
       value: null,
+      //value: '',
+
+      // For dropdown box
+      open: false,
       items: [
         // Can only do 4 at most, can't scroll to access the rest, bottom
         // navigator blocks it
@@ -96,6 +98,11 @@ export default class JourneyRecorder extends Component {
     }
     if (destination === "") {
       Alert.alert("Please enter an end location");
+      return;
+    }
+    // Handle dropdown box not chosen
+    if (value == null) {
+      Alert.alert("Please choose a transportation mode");
       return;
     }
 
@@ -256,6 +263,7 @@ export default class JourneyRecorder extends Component {
   }
 }
 
+// Styles for journey recorder screen
 const styles = StyleSheet.create({
 
   container: {

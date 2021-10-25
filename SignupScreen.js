@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Alert, Text, TextInput, StyleSheet } from 'react-native';
+import { Alert, Text, TextInput, StyleSheet, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as SQLite from 'expo-sqlite';
-import {Image} from 'react-native' ; 
-import logo from './assets/images/icon.png';
 import { CheckBox } from 'react-native-elements'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import * as SQLite from 'expo-sqlite';
+
+import styles from './Styles.js';
+import logo from './assets/images/icon.png';
 
 // Signup can be accessed from LoginScreen
 export default class SignupScreen extends Component {
@@ -137,18 +139,23 @@ export default class SignupScreen extends Component {
     
     return (
       <KeyboardAwareScrollView 
-      contentContainerStyle={styles.container}
+      contentContainerStyle={signupStyles.container}
       resetScrollToCoords={{ x: 0, y: 0 }}
       scrollEnabled={false}> 
-        <Image source={logo} style={{ width: 120, height: 150}} /> 
-        <Text style={styles.heading}>Light Feet</Text>
+
+        <Image source={logo} style={signupStyles.image} /> 
+
+        <Text style={signupStyles.heading}>
+          Light Feet
+        </Text>
+
         <TextInput
           value={this.state.email}
           onChangeText={(email) => this.setState({ email })}
           color= 'white'
           placeholder={'Email'}
           placeholderTextColor='white'
-          style={styles.input}
+          style={signupStyles.input}
         />
         <TextInput
           value={this.state.username}
@@ -156,7 +163,7 @@ export default class SignupScreen extends Component {
           color= 'white'
           placeholder={'Username'}
           placeholderTextColor='white'
-          style={styles.input}
+          style={signupStyles.input}
         />
         <TextInput 
           value={this.state.password}
@@ -165,7 +172,7 @@ export default class SignupScreen extends Component {
           placeholder={'Password'}
           placeholderTextColor='white'
           secureTextEntry={true}
-          style={styles.input}
+          style={signupStyles.input}
         />
         <TextInput 
           value={this.state.confirmPassword}
@@ -174,7 +181,7 @@ export default class SignupScreen extends Component {
           placeholder={'Confirm Password'}
           placeholderTextColor='white'
           secureTextEntry={true}
-          style={styles.input}
+          style={signupStyles.input}
         />
         <TextInput 
           value={this.state.fname}
@@ -182,7 +189,7 @@ export default class SignupScreen extends Component {
           color= 'white'
           placeholder={'First Name'}
           placeholderTextColor='white'
-          style={styles.input}
+          style={signupStyles.input}
         />
         <TextInput 
           value={this.state.lname}
@@ -190,64 +197,72 @@ export default class SignupScreen extends Component {
           color= 'white'
           placeholder={'Last Name'}
           placeholderTextColor='white'
-          style={styles.input}
+          style={signupStyles.input}
         />
+
         <CheckBox 
-          title={<Text style={{color: 'white', fontWeight: 'normal'}}>I agree with the Terms & Conditions</Text>}
+          title={
+            <Text 
+              style={signupStyles.checkbox}>
+              I agree with the Terms & Conditions
+            </Text>
+          }
           checked={this.state.checked}
-          containerStyle ={{backgroundColor: 'transparent',borderWidth:0,marginTop:-10}}
+          containerStyle ={{backgroundColor: 'transparent', borderWidth: 0}}
           onPress={() => this.setState({ checked: !this.state.checked })}
         />
+
         <TouchableOpacity 
           activeOpacity={0.5}
-          style={styles.signup}
+          style={styles.blueBtn}
           onPress={this.onSignup.bind(this)}>
-            <Text style={{fontSize:16,color:'white',fontWeight:'bold'}}>
-              Sign up
-            </Text>
+          <Text style={styles.blueBtnText}>
+            Sign up
+          </Text>
         </TouchableOpacity>
+        
       </KeyboardAwareScrollView>
     );
   }
 }
 
-  const styles = StyleSheet.create({
-  
-    heading: {
-      color: 'white',
-      marginBottom: 50,
-      fontSize: 40,
-      fontFamily: 'Helvetica',
-      fontWeight: 'bold',
-    },
-  
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'black',
-    },
-  
-    input: {
-      width: 260,
-      height: 40,
-      padding: 10,
-      borderWidth: 1,
-      borderColor: 'white',
-      marginBottom: 10,
-      borderRadius:20,
-    },
-    
-    signup: {
-      width: 200,
-      height: 40,
-      padding: 10,
-      borderWidth: 1,
-      marginTop:20,
-      backgroundColor:'skyblue',
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }
+// Styles for signup screen
+const signupStyles = StyleSheet.create({
 
-  });
+  image: {
+    width: 120,
+    height: 150
+  },
+
+  heading: {
+    color: 'white',
+    marginBottom: 40,
+    fontSize: 40,
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold'
+  },
+
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black'
+  },
+
+  // Longer width than loginStyles.input
+  input: {
+    width: 260,
+    height: 40,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'white',
+    marginBottom: 10,
+    borderRadius: 20
+  },
+
+  checkbox: {
+    color: 'white', 
+    fontWeight: 'normal'
+  }
+
+});

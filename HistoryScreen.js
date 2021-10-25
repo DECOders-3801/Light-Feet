@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { Table, Row, TableWrapper } from 'react-native-table-component';
+import { Table, Row } from 'react-native-table-component';
+
 import * as SQLite from 'expo-sqlite';
 
-const MAX_ROWS = 50;    // Up to how many past journeys to display
+import styles from './Styles.js';
+
+const MAX_ROWS = 50;       // Up to how many past journeys to display
+const COLUMN_WIDTH = 130;  // Width of each column in the table
 
 // Historical journeys screen
 export default class HistoryScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // For displaying journeys in a table
       tableHead: ['Start', 'End', 'Mode'],
-      widthArr: [120, 120, 120],
+      widthArr: [COLUMN_WIDTH, COLUMN_WIDTH, COLUMN_WIDTH],
       tableData: [],
-      username: ''
-    }
 
-    // Pass parameter
-    this.state.username = this.props.route.params.username;
+      // Pass parameter
+      username: this.props.route.params.username
+    }
 
     this.db = SQLite.openDatabase('MainDB.db');
     this.updateData();
@@ -49,7 +53,7 @@ export default class HistoryScreen extends Component {
           var len = results.rows.length;
           if (len > 0) {
 
-            //var data = [];
+            var data = [];
             this.state.tableData = [];
             // Get all rows up to 50 at most
             //console.log(len);
@@ -64,10 +68,11 @@ export default class HistoryScreen extends Component {
               dataRow.push(row.Origin);
               dataRow.push(row.Destination);
               dataRow.push(row.Mode);
-              this.state.tableData.push(dataRow);
+              data.push(dataRow);
+              //this.state.tableData.push(dataRow);
             }
 
-            //this.state.tableData = data;
+            this.setState({tableData: data});
           }
         },
         (tx, error) => {console.log(error)}
@@ -94,44 +99,48 @@ export default class HistoryScreen extends Component {
     const state = this.state;
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View>
-          <Text style={styles.header}>
+      <SafeAreaView style={historyStyles.container}>
+        <View style={{marginBottom:40}}>
+          <Text style={historyStyles.header}>
             History
           </Text>
-          <Text style={{color: 'white', fontSize: 18, textAlign: 'center', marginBottom: 20}}>
+
+          <Text style={historyStyles.text}>
             Here are your past journeys (up to 50)
           </Text>
-
-          <TouchableOpacity 
-            activeOpacity={0.5}
-            style={styles.redBtn}
-            onPress={() => this.clearData()}
-            >
-            <Text style={{fontSize: 18, color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
-            Clear history
-            </Text>
-          </TouchableOpacity>
         </View>
         
         <View>
           <Table borderStyle={{borderColor: '#C1C0B9'}}>
-            <Row data={state.tableHead} widthArr={state.widthArr} style={styles.head} textStyle={styles.text}/>
+            <Row data={state.tableHead} widthArr={state.widthArr} 
+            style={historyStyles.head} textStyle={historyStyles.text}/>
           </Table>
-          <ScrollView style={styles.dataWrapper}>
+          <ScrollView style={historyStyles.dataWrapper}
+          contentContainerStyle={{paddingBottom: 200}}>
+
             <Table borderStyle={{borderColor: '#C1C0B9', borderWidth: 2}}>
-                {
-                  this.state.tableData.map((dataRow, index) => (
-                    <Row
-                      key={index}
-                      data={dataRow}
-                      widthArr={state.widthArr}
-                      style={[styles.row, index%2 && {backgroundColor: '#ffffff'}]}
-                      textStyle={styles.contentText}
-                    />
-                  ))
-                }
+              {
+                this.state.tableData.map((dataRow, index) => (
+                  <Row
+                    key={index}
+                    data={dataRow}
+                    widthArr={state.widthArr}
+                    style={[historyStyles.row, index%2 && {backgroundColor: '#ffffff'}]}
+                    textStyle={historyStyles.contentText}
+                  />
+                ))
+              }
             </Table>
+
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.redBtn}
+              onPress={() => this.clearData()}
+              >
+              <Text style={styles.redBtnText}>
+              Clear history
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -139,7 +148,9 @@ export default class HistoryScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+// Styles for history screen
+const historyStyles = StyleSheet.create({
+
   container: { 
     flex: 1, 
     padding: 16, 
@@ -148,53 +159,39 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   
-  header:{
+  header: {
     color:'white',
-    fontSize:40,
-    textAlign:'center',
-    fontWeight:'bold',
-    marginBottom:30
+    fontSize: 40,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 30
   },
 
-  head: { 
+  head: {
     height: 50, 
     backgroundColor: '#11DB8F' 
   },
 
-  text: { 
+  text: {
     textAlign: 'center', 
-    fontWeight: 'bold', 
-    color:'white',
-    fontSize:18,
-    fontWeight:'bold'
+    color: 'white',
+    fontSize: 18,
+    //fontWeight: 'bold'
   },
 
   contentText: {
     textAlign: 'center', 
     fontWeight: '200', 
-    color:'black',
+    color: 'black'
   },
 
-  dataWrapper: { 
-    marginTop: -1,
+  dataWrapper: {
+    marginTop: -1 
   },
   
-  row: { 
+  row: {
     height: 50, 
-    backgroundColor: '#F7F8FA',
-    // flex: 1
-  },
-
-  redBtn: {
-    width: 200,
-    height: 50,
-    padding: 10,
-    borderWidth: 1,
-    backgroundColor:'red',
-    borderRadius: 20,
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal:100
+    backgroundColor: '#F7F8FA' 
   }
-});
+
+})

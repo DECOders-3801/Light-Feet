@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-
-import { VictoryPie } from 'victory-native';
-import * as SQLite from 'expo-sqlite';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { VictoryPie } from 'victory-native';
+
+import * as SQLite from 'expo-sqlite';
+
+import styles from './Styles.js';
 
 //const POINTS_FACTOR = 100;  // Points obtained per journey
 const MAX_POINTS = 500;     // Number of points until the bar is filled
@@ -42,14 +44,13 @@ export default class WelcomeScreen extends Component {
 
   // Check if goal reached for bonus points
   componentDidUpdate() {
-    const { username } = this.state;
+    const { username, totalPoints, goalPoints } = this.state;
 
     // Maximum goal points reached - update total points and goal points
-    if (this.state.goalPoints >= MAX_POINTS) {
+    if (goalPoints >= MAX_POINTS) {
       Alert.alert("Goal reached! 200 bonus points obtained");
 
-      // Give bonus points
-      this.setState({ totalPoints: this.state.totalPoints + BONUS_POINTS });
+      // Give bonus points (both state variable and database)
       this.db.transaction(tx => {
         tx.executeSql(
           `UPDATE Users SET TotalPoints = TotalPoints + ${BONUS_POINTS} WHERE Username = '${username}';`, 
@@ -57,28 +58,35 @@ export default class WelcomeScreen extends Component {
           (tx, results) => { },
           (tx, error) => { console.log(error) }
       )});
+      this.setState({ totalPoints: totalPoints + BONUS_POINTS });
 
       // Reset goal points to 0 (both state variable and database)
-      this.setState({ goalPoints: 0 });
       this.db.transaction(tx => {
         tx.executeSql(
-          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${this.state.username}';`, [],
+          `UPDATE Users SET GoalPoints = 0 WHERE Username = '${username}';`, [],
           (tx, results) => { },
           (tx, error) => { console.log(error) }
       )});
+      this.setState({ goalPoints: 0 });
     }
   }
 
   // Update the data when focusing on this screen again (going back from JourneyRecorder)
-  componentDidMount(){
-    this.subscribe = this.props.navigation.addListener('didFocus', () => {
+  componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('didFocus', () => {
       this.updateData();
     });
   }
 
+  // Not needed
+  // // Remove listener
+  // componentWillUnmount() {
+  //   this._unsubscribe();
+  // }
+
   // Update states based on the database entry for the user
   updateData() {
-    const { username, totalPoints, goalPoints } = this.state;
+    const { username } = this.state;
 
     this.db = SQLite.openDatabase('MainDB.db');
     this.db.transaction(tx => {
@@ -97,7 +105,7 @@ export default class WelcomeScreen extends Component {
   }
 
   render() {
-    const { email, username, fname, lname, totalPoints, goalPoints } = this.state;
+    const { username, goalPoints } = this.state;
     const welcomeText = `Welcome back ${username}!`;
 
     const graphicData = [
@@ -107,21 +115,24 @@ export default class WelcomeScreen extends Component {
     const graphicColor = ['#11DB8F', 'white'];
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={{color:'white', marginTop:100, fontWeight:'bold', fontSize:40, textAlign: 'center'}}>
+      <SafeAreaView style={welcomeStyles.container}>
+
+        <View style={welcomeStyles.headerContainer}>
+          <Text style={welcomeStyles.header}>
             {welcomeText}
           </Text>
         </View>
-        <View style={styles.content}>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:21, flex:-1, paddingVertical:200, 
-                        position:'absolute', paddingTop:200}}>
+
+        <View style={welcomeStyles.content}>
+
+          <Text style={welcomeStyles.progressBarText}>
             {MAX_POINTS - goalPoints} points to go
           </Text>
-          <Text style={{color:'white', fontWeight:'bold', fontSize:16, flex:-1, paddingVertical:200, 
-                        position:'absolute', paddingTop:510}}>
+
+          <Text style={welcomeStyles.explainText}>
             Reach the goal for {BONUS_POINTS} bonus points!
           </Text>
+
           <VictoryPie
             //standalone={false}
             animate={{ duration: 1000 }}
@@ -131,30 +142,26 @@ export default class WelcomeScreen extends Component {
             colorScale={graphicColor} 
             labels={() => null}
           />
+
         </View>
+
         <View>
           <TouchableOpacity 
               activeOpacity={0.5}
-              style={styles.start}
+              style={styles.greenBtn}
               onPress={() => this.props.navigation.navigate('JourneyRecorder')}>
-                <Text style={{fontSize:36, color:'white', fontWeight:'bold'}}>
+                <Text style={styles.greenBtnText}>
                   Start</Text>
             </TouchableOpacity>
-        </View> 
+        </View>
+
       </SafeAreaView>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  
-  header: {
-    color: 'white',
-    marginBottom: 20,
-    fontFamily: 'Helvetica',
-    fontWeight: 'bold',
-    position:'relative',
-  },
+// Styles for welcome screen
+const welcomeStyles = StyleSheet.create({
 
   container: {
     flex: 1,
@@ -162,22 +169,45 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
 
+  headerContainer: {
+    color: 'white',
+    marginBottom: 20,
+    fontFamily: 'Helvetica',
+    fontWeight: 'bold',
+    position:'relative',
+  },
+
+  header: {
+    color: 'white',
+    marginTop: 100,
+    fontWeight: 'bold',
+    fontSize: 40,
+    textAlign: 'center'
+  },
+
   content: {
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  start: {
-    width: 200,
-    height: 80,
-    padding: 10,
-    borderWidth: 1,
-    backgroundColor:'#11DB8F',
-    borderRadius: 20,
-    marginTop: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal:100,
+  progressBarText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 21,
+    flex:-1,
+    paddingVertical: 200,
+    position: 'absolute',
+    paddingTop: 200
+  },
+
+  explainText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    flex: -1,
+    paddingVertical: 200,
+    position: 'absolute',
+    paddingTop: 510
   }
 
 });
