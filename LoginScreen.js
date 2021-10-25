@@ -84,10 +84,11 @@ export default class LoginScreen extends Component {
     const { userText, passText } = this.state;
 
     // SQL - check if user exists upon logging in
+    // Username is case-insensitive, but password is case-sensitive
     this.db.transaction(tx => {
 
       tx.executeSql(
-        `SELECT * FROM Users WHERE Username = '${userText}' AND Password = '${passText}'`, [],
+        `SELECT * FROM Users WHERE LOWER(Username) = '${userText.toLowerCase()}' AND Password = '${passText}'`, [],
           
         (tx, results) => {
           //console.log(results.rows.length);
