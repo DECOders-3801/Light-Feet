@@ -38,3 +38,21 @@ npm install react-native-keyboard-aware-scroll-view
 ```
 
 # Note: Edit README.md every time we use a new library/add-on
+
+
+# Source code
+```shell
+The components (screens) are:
+- HistoryScreen.js
+- JourneyRecorder.js
+- LoginScreen.js
+- ProfileScreen.js
+- RewardScreen.js
+- SignupScreen.js
+- WelcomeScreen.js
+
+The screen navigators are:
+- App.js
+- BottomNavigator.js
+- HomeNavigator.js
+```
