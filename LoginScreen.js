@@ -215,6 +215,7 @@ const loginStyles = StyleSheet.create({
     backgroundColor:'skyblue',
     borderRadius: 20,
     marginTop: 30,
+    marginBottom: 60,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -228,7 +229,7 @@ const loginStyles = StyleSheet.create({
   signupBtn: {
     width: 200,
     height: 30,
-    marginTop: 120,
+    marginTop: 60,
     alignItems: 'center',
     justifyContent: 'center'
   }
