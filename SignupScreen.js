@@ -238,7 +238,7 @@ const signupStyles = StyleSheet.create({
     color: 'white',
     marginBottom: 40,
     fontSize: 40,
-    fontFamily: 'Helvetica',
+    //fontFamily: 'Helvetica',
     fontWeight: 'bold'
   },
 

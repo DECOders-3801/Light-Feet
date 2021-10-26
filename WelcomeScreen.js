@@ -172,7 +172,7 @@ const welcomeStyles = StyleSheet.create({
   headerContainer: {
     color: 'white',
     marginBottom: 20,
-    fontFamily: 'Helvetica',
+    //fontFamily: 'Helvetica',
     fontWeight: 'bold',
     position:'relative',
   },

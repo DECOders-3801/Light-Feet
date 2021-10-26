@@ -186,7 +186,7 @@ const loginStyles = StyleSheet.create({
     color: 'white',
     marginBottom: 80,
     fontSize: 40,
-    fontFamily: 'Helvetica',
+    //fontFamily: 'Helvetica',
     fontWeight: 'bold'
   },
 
