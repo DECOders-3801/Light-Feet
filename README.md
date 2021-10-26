@@ -1,11 +1,17 @@
 # Run
 
-To run the app, enter one of the following:
+This project was built using Expo in Visual Studio Code.
+To run the app, enter one of the following in the terminal:
 ```shell
 npm start
 yarn start
 expo start
 ```
+A window will pop up with several options of how to run the app:
+- Run on Android device/emulator
+- Run on iOS simulator
+- Run in web browser
+- You can also scan the QR code on an iOS or Android device (Expo Go app required)
 
 # Install
 
