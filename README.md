@@ -1,17 +1,20 @@
 # Run
 
-This project was built using Expo in Visual Studio Code.
+The Light Feet mobile app was built using Expo in Visual Studio Code.
+The Expo Go app on iOS or Android was used to test the app.
+
 To run the app, enter one of the following in the terminal:
 ```shell
 npm start
 yarn start
 expo start
 ```
-A window will pop up with several options of how to run the app:
-- Run on Android device/emulator
-- Run on iOS simulator (XCode may need to be installed in the terminal)
-- Run in web browser
-- You can also scan the QR code on an iOS or Android device (Expo Go app required)
+
+A window will pop up with options on how to run the app:
+- Run on Android device/emulator. For example, connect your Android device via USB and open the Expo Go app.
+- Run on iOS simulator (XCode may need to be installed)
+- Not applicable: Run in web browser
+- RECOMMENDED: Scan the QR code on an iOS or Android device and open the Expo Go app.
 
 # Install
 
