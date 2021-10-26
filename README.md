@@ -14,7 +14,7 @@ A window will pop up with options on how to run the app:
 - Run on Android device/emulator. For example, connect your Android device via USB and open the Expo Go app.
 - Run on iOS simulator (XCode may need to be installed)
 - Not applicable: Run in web browser
-- RECOMMENDED: Scan the QR code on an iOS or Android device and open the Expo Go app.
+- RECOMMENDED: Scan the QR code on an iOS or Android device which will open the Expo Go app.
 
 # Install
 
