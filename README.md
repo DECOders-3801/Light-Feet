@@ -9,7 +9,7 @@ expo start
 ```
 A window will pop up with several options of how to run the app:
 - Run on Android device/emulator
-- Run on iOS simulator
+- Run on iOS simulator (XCode may need to be installed in the terminal)
 - Run in web browser
 - You can also scan the QR code on an iOS or Android device (Expo Go app required)
 
