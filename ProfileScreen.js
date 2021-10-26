@@ -82,7 +82,7 @@ const profileStyles = StyleSheet.create({
     color: 'white',
     fontSize: 30,
     marginLeft: 40,
-    fontFamily: 'Helvetica',
+    //fontFamily: 'Helvetica',
     fontWeight: 'bold',
     paddingTop: 70
   },
